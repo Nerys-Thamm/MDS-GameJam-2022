@@ -37,7 +37,7 @@ public class MonsterMode : MonoBehaviour
     void Update()
     {
         m_IsInMonsterMode = Mathf.Approximately(Input_SwitchMode.ReadValue<float>(), 1);
-       
+     
         if (m_IsInMonsterMode)
         {
             RaycastHit hit;
@@ -46,10 +46,6 @@ public class MonsterMode : MonoBehaviour
             {
                 Debug.Log("Kid Eaten");
                 Destroy(hit.transform.gameObject);
-                /*if (hit.transform.CompareTag("Kid"))
-                {
-                   
-                }*/
             }
         }
     }
