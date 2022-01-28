@@ -50,6 +50,20 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     Transform m_playerTransform;
 
+    // Added Death SFX - Ash
+    [SerializeField]
+    SFX_Effect Death_Effect;
+
+    bool isDead = false;
+    public void OnDeath()
+    {
+        GetComponent<MeshFilter>().mesh = null;
+        Destroy(GetComponent<CapsuleCollider>());
+
+        Death_Effect.Play();
+        isDead = true;
+    }
+
     //Check if a House is within range and within the viewing angle
     bool CheckHouseInRange()
     {
@@ -136,6 +150,11 @@ public class TrickOrTreaterAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isDead && !Death_Effect.m_effectsList[0].m_particle.isPlaying)
+        {
+            Destroy(gameObject);
+        }
+
         switch (m_currentState)
         {
             case State.SEEKING_HOUSE:

@@ -10,6 +10,7 @@ public class PlayerMotor : MonoBehaviour
     [SerializeField] float m_TurnSpeed = 360.0f;
     private Vector3 m_MovementDelta;
 
+    Animator m_animator;
     InputAction Movement;
 
     bool m_IsMovementLocked = false;

@@ -12,11 +12,13 @@ public class MonsterMode : MonoBehaviour
 
     [SerializeField] Transform m_SpherePoint;
     [SerializeField] float m_SphereCastRadius;
-    [SerializeField] float m_SphereOffset = 5.0f;
-    float m_SpherecastMaxDist = 5.0f;
     [SerializeField] LayerMask m_LayerMask; 
 
     InputAction Input_SwitchMode;
+    Animator m_animator;
+
+    float m_transformCooldown;
+    float m_maxTrasnformCooldown = 10.0f;
 
     [SerializeField]
     SFX_Effect TransformIntoEffect;
@@ -52,9 +54,6 @@ public class MonsterMode : MonoBehaviour
     void Update()
     {
         Input_SwitchMode.performed += ToggleMonsterMode;
-         
-            
-        
      
         if (m_IsInMonsterMode)
         {
@@ -63,7 +62,8 @@ public class MonsterMode : MonoBehaviour
 
             foreach (Collider NPC in hitNPCs)
             {
-                Destroy(NPC.gameObject);
+                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
+                thisNPC.OnDeath();
             }
         }
     }
