@@ -17,6 +17,7 @@ public class MonsterMode : MonoBehaviour
     InputAction Input_SwitchMode;
     Animator m_animator;
 
+    [SerializeField]
     float m_transformCooldown;
     float m_maxTrasnformCooldown = 10.0f;
 
@@ -28,7 +29,7 @@ public class MonsterMode : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Input_SwitchMode = new InputAction("MonsterMode", binding: "<Keyboard>/space");
+        Input_SwitchMode = new InputAction("MonsterMode", binding: "<Gamepad>/rightTrigger");
         Input_SwitchMode.AddBinding("<Keyboard>/leftShift");
 
         m_PlayerMovement = GetComponent<PlayerMotor>();
@@ -38,14 +39,21 @@ public class MonsterMode : MonoBehaviour
 
     void ToggleMonsterMode(InputAction.CallbackContext context)
     {
-        m_IsInMonsterMode = !m_IsInMonsterMode;
-        if (m_IsInMonsterMode)
+        if (m_transformCooldown <= 0.0f)
         {
-            TransformIntoEffect.Play();
+            m_IsInMonsterMode = !m_IsInMonsterMode;
+            if (m_IsInMonsterMode)
+            {
+                TransformIntoEffect.Play();
+            }
+            else
+            {
+                TransformOutOfEffect.Play();
+            }
+            m_transformCooldown = m_maxTrasnformCooldown;
         }
-        else
-        {
-            TransformOutOfEffect.Play();
+        else {
+            return;
         }
     }
 
@@ -53,6 +61,10 @@ public class MonsterMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_transformCooldown > 0.0f)
+        {
+            m_transformCooldown -= Time.deltaTime;
+        }
         Input_SwitchMode.performed += ToggleMonsterMode;
      
         if (m_IsInMonsterMode)
