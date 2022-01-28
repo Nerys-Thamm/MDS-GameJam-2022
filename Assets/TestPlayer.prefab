@@ -95,46 +95,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &69202436242662487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8520568464522467879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13db967582573f387bd4f16f5bedad59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_noiseSettingsData: {fileID: 0}
-  m_playOnAwake: 0
-  m_loop: 0
-  m_effectsList:
-  - m_type: 3
-    m_waitDuration: 0
-    m_clip: {fileID: 0}
-    m_source: {fileID: 0}
-    m_particle: {fileID: 8140832912125836017}
-    m_screenShakeAmplitude: {x: 0, y: 0}
-    m_prefab: {fileID: 0}
-    m_controllerRumbleSpeed: {x: 0, y: 0}
-  - m_type: 3
-    m_waitDuration: 0
-    m_clip: {fileID: 0}
-    m_source: {fileID: 0}
-    m_particle: {fileID: 2002570649987205597}
-    m_screenShakeAmplitude: {x: 0, y: 0}
-    m_prefab: {fileID: 0}
-    m_controllerRumbleSpeed: {x: 0, y: 0}
-  - m_type: 3
-    m_waitDuration: 0
-    m_clip: {fileID: 0}
-    m_source: {fileID: 0}
-    m_particle: {fileID: 4471080547543750763}
-    m_screenShakeAmplitude: {x: 0, y: 0}
-    m_prefab: {fileID: 0}
-    m_controllerRumbleSpeed: {x: 0, y: 0}
 --- !u!1 &69202436361235343
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,10 +166,10 @@ GameObject:
   - component: {fileID: 69202437043271431}
   - component: {fileID: 69202437043271430}
   - component: {fileID: 69202437043271425}
-  - component: {fileID: 69202437043271424}
   - component: {fileID: 69202437043271427}
   - component: {fileID: 69202437043271428}
   - component: {fileID: 69202437043271426}
+  - component: {fileID: 717841329}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -285,20 +245,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &69202437043271424
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69202437043271485}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &69202437043271427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,10 +261,10 @@ MonoBehaviour:
   m_IsInMonsterMode: 0
   m_SpherePoint: {fileID: 69202436377120477}
   m_SphereCastRadius: 2.13
-  m_SphereOffset: 5
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 128
+  m_transformCooldown: 0
   TransformIntoEffect: {fileID: 69202437170707738}
   TransformOutOfEffect: {fileID: 69202436242662487}
 --- !u!114 &69202437043271428
@@ -352,6 +298,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!65 &717841329
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69202437043271485}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &69202437170707738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,6 +357,46 @@ MonoBehaviour:
     m_source: {fileID: 0}
     m_particle: {fileID: 0}
     m_screenShakeAmplitude: {x: 5, y: 5}
+    m_prefab: {fileID: 0}
+    m_controllerRumbleSpeed: {x: 0, y: 0}
+--- !u!114 &69202436242662487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8520568464522467879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13db967582573f387bd4f16f5bedad59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_noiseSettingsData: {fileID: 0}
+  m_playOnAwake: 0
+  m_loop: 0
+  m_effectsList:
+  - m_type: 3
+    m_waitDuration: 0
+    m_clip: {fileID: 0}
+    m_source: {fileID: 0}
+    m_particle: {fileID: 8140832912125836017}
+    m_screenShakeAmplitude: {x: 0, y: 0}
+    m_prefab: {fileID: 0}
+    m_controllerRumbleSpeed: {x: 0, y: 0}
+  - m_type: 3
+    m_waitDuration: 0
+    m_clip: {fileID: 0}
+    m_source: {fileID: 0}
+    m_particle: {fileID: 2002570649987205597}
+    m_screenShakeAmplitude: {x: 0, y: 0}
+    m_prefab: {fileID: 0}
+    m_controllerRumbleSpeed: {x: 0, y: 0}
+  - m_type: 3
+    m_waitDuration: 0
+    m_clip: {fileID: 0}
+    m_source: {fileID: 0}
+    m_particle: {fileID: 4471080547543750763}
+    m_screenShakeAmplitude: {x: 0, y: 0}
     m_prefab: {fileID: 0}
     m_controllerRumbleSpeed: {x: 0, y: 0}
 --- !u!1001 &69202435577650727
