@@ -5,21 +5,29 @@ using UnityEngine;
 
 public class PlayerMotor : MonoBehaviour
 {
+    [Header("Internal Components")]
     [SerializeField] Rigidbody m_Rigid;
+    Animator m_animator;
+
+    [Header("Info")]
     [SerializeField] float m_MoveSpeed = 10.0f;
     [SerializeField] float m_TurnSpeed = 360.0f;
-    private Vector3 m_MovementDelta;
+    [SerializeField] bool m_IsMovementLocked = false;
 
-    Animator m_animator;
+    Vector3 m_MovementDelta;
+
+
+
+    //InputActions
     InputAction Movement;
 
-    bool m_IsMovementLocked = false;
 
     // Might be useful for the Transformation animation
     void ToggleMovementLock()
     {
         m_IsMovementLocked = !m_IsMovementLocked;
     }
+
     void ProcessInput()
     {
         m_MovementDelta = Movement.ReadValue<Vector2>();
@@ -30,7 +38,6 @@ public class PlayerMotor : MonoBehaviour
 
     void Look()
     {
-        //transform.rotation = Quaternion.Euler(0.0f, transform.rotation.y, 0.0f);
         if (m_MovementDelta != Vector3.zero)
         {
             var matrix = Matrix4x4.Rotate(Quaternion.identity);
@@ -62,14 +69,13 @@ public class PlayerMotor : MonoBehaviour
         Movement.Enable();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (!m_IsMovementLocked)
             ProcessInput();
     }
 
-    private void Update()
+    void Update()
     {
         Look();
     }

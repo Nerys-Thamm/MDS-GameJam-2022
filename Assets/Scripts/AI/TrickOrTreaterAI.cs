@@ -7,12 +7,12 @@ public class TrickOrTreaterAI : MonoBehaviour
 {
     public enum State
     {
-        SEEKING_HOUSE,
-        WAITING_FOR_TREAT,
-        WANDERING,
-        SEEKING_BAIT,
-        EATING_BAIT,
-        FLEEING,
+        SEEKING_HOUSE, // Walk
+        WAITING_FOR_TREAT, // Idle
+        WANDERING, // Walk
+        SEEKING_BAIT, // Walk
+        EATING_BAIT, // Idle
+        FLEEING, // running
     }
 
     //AI Parameters

@@ -7,34 +7,61 @@ using UnityEngine;
 
 public class MonsterMode : MonoBehaviour
 {
-    [SerializeField] PlayerMotor m_PlayerMovement;
-    [SerializeField] bool m_IsInMonsterMode = false;
+    //Components
+    [Header("Internal Components")]
+    Animator m_animator;
+    PlayerMotor m_PlayerMovement;
+    [SerializeField] Light m_SpotLight;
+    [SerializeField] SFX_Effect TransformIntoEffect;
+    [SerializeField] SFX_Effect TransformOutOfEffect;
 
+    [SerializeField] GameObject CandyPrefab;
+
+    [Header("Info")]
+    [SerializeField] bool m_IsInMonsterMode = false;
     [SerializeField] Transform m_SpherePoint;
     [SerializeField] float m_SphereCastRadius;
-    [SerializeField] LayerMask m_LayerMask; 
+    [SerializeField] LayerMask m_EatableLayerMask;
+    [SerializeField] float m_transformCooldown;
+    [SerializeField] float m_DropCandyCooldown;
+    [SerializeField] float m_MaxDropCandyCooldown = 1.5f;
 
+    [SerializeField] Transform m_CandyDropPoint;
+
+    //Input Actions
     InputAction Input_SwitchMode;
-    Animator m_animator;
+    InputAction Input_DropCandy;
 
-    [SerializeField]
-    float m_transformCooldown;
     float m_maxTrasnformCooldown = 10.0f;
-
-    [SerializeField]
-    SFX_Effect TransformIntoEffect;
-    [SerializeField]
-    SFX_Effect TransformOutOfEffect;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Bind Action Inputs
         Input_SwitchMode = new InputAction("MonsterMode", binding: "<Gamepad>/rightTrigger");
         Input_SwitchMode.AddBinding("<Keyboard>/leftShift");
 
-        m_PlayerMovement = GetComponent<PlayerMotor>();
+        Input_DropCandy = new InputAction("DropCandy", binding: "<Gamepad>/leftTrigger");
+        Input_DropCandy.AddBinding("<Keyboard>/space");
 
+        //Enable Inputs
+        Input_DropCandy.Enable();
         Input_SwitchMode.Enable();
+
+        //Get Internal Components
+        m_PlayerMovement = GetComponent<PlayerMotor>();
+        m_SpotLight = GetComponentInChildren<Light>();
+
+        m_SpotLight.enabled = false;
+    }
+
+    void DropCandy(InputAction.CallbackContext context)
+    {
+        if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f)
+        {
+            Instantiate(CandyPrefab, m_CandyDropPoint.position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f),0.0f));
+            m_DropCandyCooldown = m_MaxDropCandyCooldown;
+        }
     }
 
     void ToggleMonsterMode(InputAction.CallbackContext context)
@@ -44,10 +71,12 @@ public class MonsterMode : MonoBehaviour
             m_IsInMonsterMode = !m_IsInMonsterMode;
             if (m_IsInMonsterMode)
             {
+                m_SpotLight.enabled = true;
                 TransformIntoEffect.Play();
             }
             else
             {
+                m_SpotLight.enabled = false;
                 TransformOutOfEffect.Play();
             }
             m_transformCooldown = m_maxTrasnformCooldown;
@@ -65,12 +94,18 @@ public class MonsterMode : MonoBehaviour
         {
             m_transformCooldown -= Time.deltaTime;
         }
+
+        if (m_DropCandyCooldown > 0.0f)
+        {
+            m_DropCandyCooldown -= Time.deltaTime;
+        }
+
         Input_SwitchMode.performed += ToggleMonsterMode;
-     
+        Input_DropCandy.performed += DropCandy;
+
         if (m_IsInMonsterMode)
         {
-            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_LayerMask);
-
+            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
 
             foreach (Collider NPC in hitNPCs)
             {
@@ -78,11 +113,6 @@ public class MonsterMode : MonoBehaviour
                 thisNPC.OnDeath();
             }
         }
-    }
-
-    private void Input_SwitchMode_performed(InputAction.CallbackContext obj)
-    {
-        throw new System.NotImplementedException();
     }
 
     private void OnDrawGizmos()
