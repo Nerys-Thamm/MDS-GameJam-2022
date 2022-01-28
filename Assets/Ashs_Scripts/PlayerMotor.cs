@@ -7,31 +7,40 @@ public class PlayerMotor : MonoBehaviour
 {
     [SerializeField] Rigidbody m_Rigid;
     [SerializeField] float m_MoveSpeed = 10.0f;
-
+    [SerializeField] float m_TurnSpeed = 360.0f;
     private Vector3 m_MovementDelta;
 
     InputAction Movement;
 
+    bool m_IsMovementLocked = false;
+
+    // Might be useful for the Transformation animation
+    void ToggleMovementLock()
+    {
+        m_IsMovementLocked = !m_IsMovementLocked;
+    }
     void ProcessInput()
     {
-        float x = 0.0f, z = 0.0f;
-
         m_MovementDelta = Movement.ReadValue<Vector2>();
 
-        x = m_MovementDelta.x;
-        z = m_MovementDelta.y;
-        if (m_MovementDelta !=Vector3.zero)
+        if (m_MovementDelta != Vector3.zero)
             m_Rigid.MovePosition(transform.position + transform.forward * m_MoveSpeed * Time.deltaTime);
     }
 
     void Look()
     {
+        //transform.rotation = Quaternion.Euler(0.0f, transform.rotation.y, 0.0f);
         if (m_MovementDelta != Vector3.zero)
         {
-            var relative = (transform.position + new Vector3(m_MovementDelta.x, 0.0f, m_MovementDelta.y) - transform.position);
+            var matrix = Matrix4x4.Rotate(Quaternion.identity);
+
+            var skewedInput = matrix.MultiplyPoint3x4(m_MovementDelta);
+
+            var relative = (transform.position + new Vector3(skewedInput.x, 0.0f, skewedInput.y) - transform.position);
             var rot = Quaternion.LookRotation(relative, Vector3.up);
 
-            transform.rotation = rot;
+
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, m_TurnSpeed * Time.deltaTime);
         }
     }
     // Start is called before the first frame update
@@ -50,14 +59,17 @@ public class PlayerMotor : MonoBehaviour
             .With("Right", "<Keyboard>/rightArrow");
 
         Movement.Enable();
-
-
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        ProcessInput();
+        if (!m_IsMovementLocked)
+            ProcessInput();
+    }
+
+    private void Update()
+    {
         Look();
     }
 }
