@@ -35,6 +35,9 @@ public class TrickOrTreaterAI : MonoBehaviour
     public float m_HouseSeekCooldown = 2.0f;
     public float m_HouseSeekTimer = 0.0f;
 
+    public float m_fleeDuration = 5.0f;
+    public float m_fleeTimer = 0.0f;
+
     //Components
     NavMeshAgent m_agent;
     Animator m_animator;
@@ -44,6 +47,8 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     Vector3 m_targetHousePosition;
     Vector3 m_targetBaitPosition;
+
+    Transform m_playerTransform;
 
     //Check if a House is within range and within the viewing angle
     bool CheckHouseInRange()
@@ -100,11 +105,32 @@ public class TrickOrTreaterAI : MonoBehaviour
         return randomPoint;
     }
 
+    //Get a random point within the wander radius pointing away from the player
+    Vector3 GetRandomPointInFleeRadius()
+    {
+        Vector3 randomPoint = GetRandomPointInCircle(m_WanderRadius);
+        randomPoint += transform.forward * m_WanderForwardDistance;
+        randomPoint -= (m_playerTransform.position - transform.position).normalized * m_WanderForwardDistance;
+        return randomPoint;
+    }
+    
+
     // Start is called before the first frame update
     void Start()
     {
         m_agent = GetComponent<NavMeshAgent>();
         m_animator = GetComponent<Animator>();
+    }
+
+    bool CheckPlayerInViewCone()
+    {
+        Vector3 direction = m_playerTransform.position - transform.position;
+        float angle = Vector3.Angle(direction, transform.forward);
+        if (angle < m_HouseSearchAngle / 2.0f)
+        {
+            return true;
+        }
+        return false;
     }
 
     // Update is called once per frame
@@ -139,6 +165,25 @@ public class TrickOrTreaterAI : MonoBehaviour
             case State.EATING_BAIT:
                 break;
             case State.FLEEING:
+                m_fleeTimer += Time.deltaTime;
+                if (m_fleeTimer > m_fleeDuration)
+                {
+                    m_currentState = State.WANDERING;
+                    m_fleeTimer = 0.0f;
+                }
+                else
+                {
+                    if (m_currentWanderUpdate == m_WanderUpdateRate)
+                    {
+                        m_currentWanderUpdate = 0;
+                        Vector3 randomPoint = GetRandomPointInFleeRadius();
+                        m_agent.SetDestination(randomPoint);
+                    }
+                    else
+                    {
+                        m_currentWanderUpdate++;
+                    }
+                }
                 break;
             case State.WANDERING:
                 if (m_currentWanderUpdate == m_WanderUpdateRate)
