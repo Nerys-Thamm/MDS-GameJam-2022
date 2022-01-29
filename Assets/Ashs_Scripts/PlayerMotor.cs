@@ -23,7 +23,7 @@ public class PlayerMotor : MonoBehaviour
 
 
     // Might be useful for the Transformation animation
-    void ToggleMovementLock()
+    public void ToggleMovementLock()
     {
         m_IsMovementLocked = !m_IsMovementLocked;
     }

@@ -64,21 +64,29 @@ public class MonsterMode : MonoBehaviour
         }
     }
 
+    IEnumerator TransformCoroutine()
+    {
+        m_PlayerMovement.ToggleMovementLock();
+        if (m_IsInMonsterMode)
+        {
+            m_SpotLight.enabled = true;
+            TransformIntoEffect.Play();
+        }
+        else
+        {
+            m_SpotLight.enabled = false;
+            TransformOutOfEffect.Play();
+        }
+       
+        yield return new WaitForSeconds(1.5f);
+        m_PlayerMovement.ToggleMovementLock();
+    }
     void ToggleMonsterMode(InputAction.CallbackContext context)
     {
         if (m_transformCooldown <= 0.0f)
         {
             m_IsInMonsterMode = !m_IsInMonsterMode;
-            if (m_IsInMonsterMode)
-            {
-                m_SpotLight.enabled = true;
-                TransformIntoEffect.Play();
-            }
-            else
-            {
-                m_SpotLight.enabled = false;
-                TransformOutOfEffect.Play();
-            }
+            StartCoroutine(TransformCoroutine());
             m_transformCooldown = m_maxTrasnformCooldown;
         }
         else {
@@ -87,6 +95,11 @@ public class MonsterMode : MonoBehaviour
     }
 
 
+    private void LateUpdate()
+    {
+        Input_SwitchMode.performed += ToggleMonsterMode;
+        Input_DropCandy.performed += DropCandy;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -100,8 +113,7 @@ public class MonsterMode : MonoBehaviour
             m_DropCandyCooldown -= Time.deltaTime;
         }
 
-        Input_SwitchMode.performed += ToggleMonsterMode;
-        Input_DropCandy.performed += DropCandy;
+
 
         if (m_IsInMonsterMode)
         {
@@ -110,7 +122,7 @@ public class MonsterMode : MonoBehaviour
             foreach (Collider NPC in hitNPCs)
             {
                 TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.OnDeath();
+                thisNPC.Death();
             }
         }
     }
