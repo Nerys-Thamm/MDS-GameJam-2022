@@ -192,6 +192,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &62809285
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -338,6 +340,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &282807807
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -682,6 +686,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &414294909
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1318,6 +1324,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 69202437043271425, guid: d6d0623750f320346a7fb5f12710ebb5, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 06c6d015ad4acc03a8dae5fe91180166, type: 2}
     - target: {fileID: 69202437043271431, guid: d6d0623750f320346a7fb5f12710ebb5, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1481,6 +1491,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &834394286
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1627,6 +1639,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &848665610
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2215,6 +2229,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!136 &1209971581
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2703,6 +2719,8 @@ MonoBehaviour:
   m_HouseSeekTimer: 0
   m_fleeDuration: 5
   m_fleeTimer: 0
+  isAIEnabled: 1
+  Death_Effect: {fileID: 0}
 --- !u!1 &1692279978
 GameObject:
   m_ObjectHideFlags: 0
