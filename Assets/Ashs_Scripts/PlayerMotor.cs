@@ -25,7 +25,6 @@ public class PlayerMotor : MonoBehaviour
 
     //InputActions
     InputAction Movement;
-    InputAction Test_EndGame;
 
     // Might be useful for the Transformation animation
     public void ToggleMovementLock()
@@ -95,9 +94,9 @@ public class PlayerMotor : MonoBehaviour
             .With("Right", "<Keyboard>/d")
             .With("Right", "<Keyboard>/rightArrow");
 
-        Test_EndGame = new InputAction("EngameAnimation", binding: "<Keyboard>/k");
+    
         Movement.Enable();
-        Test_EndGame.Enable();
+
         m_MonsterMode = GetComponent<MonsterMode>();
         m_animator = GetComponentInChildren<Animator>();
 
@@ -106,7 +105,6 @@ public class PlayerMotor : MonoBehaviour
 
     void FixedUpdate()
     {
-        Test_EndGame.performed += m_MonsterMode.TriggerEndAnimation;
         
         if (!m_IsMovementLocked)
             ProcessInput();

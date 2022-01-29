@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonsterMode : MonoBehaviour
 {
@@ -22,8 +23,10 @@ public class MonsterMode : MonoBehaviour
     [SerializeField] float m_SphereCastRadius;
     [SerializeField] LayerMask m_EatableLayerMask;
 
-    [SerializeField] float m_CurrentHealth;
-    [SerializeField] float m_MaxHealth = 120f;
+    [SerializeField] float m_TimeLeft = 300.0f;
+
+    public int CandyCount = 10;
+
     [Header("CoolDowns")]
     [SerializeField] float m_transformCooldown;
     [SerializeField] float m_DropCandyCooldown;
@@ -68,16 +71,16 @@ public class MonsterMode : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         m_animator = GetComponentInChildren<Animator>();
 
-        m_CurrentHealth = m_MaxHealth;
     }
 
     void DropCandy(InputAction.CallbackContext context)
     {
-        if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f)
+        if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f && CandyCount > 0)
         {
             audioSource.PlayOneShot(m_DropCandy);
             Instantiate(CandyPrefab, m_CandyDropPoint.position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f),0.0f));
             m_DropCandyCooldown = m_MaxDropCandyCooldown;
+            CandyCount--;
         }
     }
 
@@ -131,6 +134,8 @@ public class MonsterMode : MonoBehaviour
         }
        
     }
+
+
     public void Attack(InputAction.CallbackContext context)
     {
         if (m_IsInMonsterMode)
@@ -139,7 +144,7 @@ public class MonsterMode : MonoBehaviour
         }
     }
 
-    public void TriggerEndAnimation(InputAction.CallbackContext context)
+    public void TriggerEndAnimation()
     {
         m_PlayerMovement.ToggleMovementLock();
         m_animator.SetTrigger("TriggerEnd");
@@ -153,13 +158,13 @@ public class MonsterMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_IsInMonsterMode)
+        if (m_TimeLeft > 0.0f)
         {
-            m_CurrentHealth -= 2 * Time.deltaTime;
+            m_TimeLeft -= Time.deltaTime;
         }
-        else
+        else if(m_TimeLeft <= 0.0f)
         {
-            m_CurrentHealth -= Time.deltaTime;
+            TriggerEndAnimation();
         }
         if (m_transformCooldown > 0.0f)
         {

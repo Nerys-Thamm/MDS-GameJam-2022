@@ -23,6 +23,10 @@ public class AnimatorHelper : MonoBehaviour
 
     }
 
+    public void EndGame()
+    {
+        GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("ScreenFade");
+    }
     public void PlayChildStep()
     {
         int i = Random.Range(0, m_ChildSteps.Count);
