@@ -34,8 +34,8 @@ public class PlayerMotor : MonoBehaviour
     void ProcessInput()
     {
         m_MovementDelta = Movement.ReadValue<Vector2>();
+        m_animator.SetBool("IfInput", Movement.ReadValue<Vector2>() != Vector2.zero);
 
-            
 
         if (m_MovementDelta != Vector3.zero)
             m_Rigid.MovePosition(transform.position + direction * m_MoveSpeed * Time.deltaTime);
@@ -80,6 +80,8 @@ public class PlayerMotor : MonoBehaviour
             .With("Right", "<Keyboard>/rightArrow");
 
         Movement.Enable();
+
+        m_animator = GetComponentInChildren<Animator>();
     }
 
     void FixedUpdate()
