@@ -16,7 +16,10 @@ public class PlayerMotor : MonoBehaviour
 
     Vector3 m_MovementDelta;
 
+    public Camera cam;
+    public Transform camTransform;
 
+    Vector3 direction;
 
     //InputActions
     InputAction Movement;
@@ -32,25 +35,35 @@ public class PlayerMotor : MonoBehaviour
     {
         m_MovementDelta = Movement.ReadValue<Vector2>();
 
+            
+
         if (m_MovementDelta != Vector3.zero)
-            m_Rigid.MovePosition(transform.position + transform.forward * m_MoveSpeed * Time.deltaTime);
+            m_Rigid.MovePosition(transform.position + direction * m_MoveSpeed * Time.deltaTime);
     }
 
     void Look()
     {
         if (m_MovementDelta != Vector3.zero)
         {
-            var matrix = Matrix4x4.Rotate(Quaternion.identity);
 
-            var skewedInput = matrix.MultiplyPoint3x4(m_MovementDelta);
+            var forward = camTransform.forward;
+            var right = camTransform.right;
+            forward.y = 0;
+            right.y = 0;
+            forward.Normalize();
+            right.Normalize();
 
-            var relative = (transform.position + new Vector3(skewedInput.x, 0.0f, skewedInput.y) - transform.position);
-            var rot = Quaternion.LookRotation(relative, Vector3.up);
+            direction = Vector3.Lerp(direction, (forward * m_MovementDelta.y + right * m_MovementDelta.x), Time.deltaTime * m_TurnSpeed);
+            direction = direction.normalized * (forward * m_MovementDelta.y + right * m_MovementDelta.x).magnitude;
+            
 
-
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, m_TurnSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
         }
     }
+
+    
+
+
     // Start is called before the first frame update
     void Start()
     {
