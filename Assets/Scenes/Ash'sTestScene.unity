@@ -4732,6 +4732,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1261609182}
     - target: {fileID: 69202437043271428, guid: d6d0623750f320346a7fb5f12710ebb5, type: 3}
+      propertyPath: m_TurnSpeed
+      value: 23.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 69202437043271428, guid: d6d0623750f320346a7fb5f12710ebb5, type: 3}
       propertyPath: camTransform
       value: 
       objectReference: {fileID: 1261609183}

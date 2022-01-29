@@ -101,18 +101,27 @@ public class MonsterMode : MonoBehaviour
         return m_IsInMonsterMode;
     }
 
-    void Attack(InputAction.CallbackContext context)
+    public void CalculateAttack()
     {
-        if (m_IsInMonsterMode)
-        {
-            StartCoroutine(m_PlayerMovement.ToggleMovementLock(1.0f));
-            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
+        Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
             Debug.Log(hitNPCs.Length);
             foreach (Collider NPC in hitNPCs)
             {
                 TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
                 thisNPC.Death();
             }
+    }
+    public void Attack(InputAction.CallbackContext context)
+    {
+        if (m_IsInMonsterMode)
+        {
+           /* Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
+            Debug.Log(hitNPCs.Length);
+            foreach (Collider NPC in hitNPCs)
+            {
+                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
+                thisNPC.Death();
+            }*/
             m_animator.SetTrigger("Attack");
         }
     }
