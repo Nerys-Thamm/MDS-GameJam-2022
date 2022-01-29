@@ -9,6 +9,8 @@ public class Candy : MonoBehaviour
 
     public float CandyLifeTime = 0.0f;
     public float MaxCandyLifeTime = 40.0f;
+
+    public float Multiplier = 1.0f;
     void CheckAreKidsInRange()
     {
         Collider[] hitNPCS = Physics.OverlapSphere(transform.position, CandyRadius, NPCmask);
@@ -18,7 +20,7 @@ public class Candy : MonoBehaviour
         {
             for (int i = 0; i < hitNPCS.Length; i++)
             {
-                decayMultiplier += 1.0f;
+                decayMultiplier += Multiplier;
 
             }
 
