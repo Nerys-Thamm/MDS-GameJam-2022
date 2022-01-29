@@ -7,12 +7,12 @@ public class TrickOrTreaterAI : MonoBehaviour
 {
     public enum State
     {
-        SEEKING_HOUSE,
-        WAITING_FOR_TREAT,
-        WANDERING,
-        SEEKING_BAIT,
-        EATING_BAIT,
-        FLEEING,
+        SEEKING_HOUSE, // Walk
+        WAITING_FOR_TREAT, // Idle
+        WANDERING, // Walk
+        SEEKING_BAIT, // Walk
+        EATING_BAIT, // Idle
+        FLEEING, // running
     }
 
     //AI Parameters
@@ -38,6 +38,7 @@ public class TrickOrTreaterAI : MonoBehaviour
     public float m_fleeDuration = 5.0f;
     public float m_fleeTimer = 0.0f;
 
+    public bool isAIEnabled = true;
     //Components
     NavMeshAgent m_agent;
     Animator m_animator;
@@ -49,6 +50,28 @@ public class TrickOrTreaterAI : MonoBehaviour
     Vector3 m_targetBaitPosition;
 
     Transform m_playerTransform;
+
+    // Added Death SFX - Ash
+    [SerializeField]
+    SFX_Effect Death_Effect;
+
+    bool isDead = false;
+    public delegate void DeathDelegate();
+    public DeathDelegate deathEvent;
+
+    public void Death()
+    {
+        GetComponent<MeshFilter>().mesh = null;
+        Destroy(GetComponent<CapsuleCollider>());
+
+        if (deathEvent != null)
+        {
+            deathEvent();
+        }
+        Death_Effect.Play();
+        isAIEnabled = false;
+        isDead = true;
+    }
 
     //Check if a House is within range and within the viewing angle
     bool CheckHouseInRange()
@@ -136,77 +159,84 @@ public class TrickOrTreaterAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (m_currentState)
+        if (isDead && !Death_Effect.m_effectsList[0].m_particle.isPlaying)
         {
-            case State.SEEKING_HOUSE:
-                m_agent.SetDestination(m_targetHousePosition);
-                if (Vector3.Distance(transform.position, m_targetHousePosition) < m_GoalReachRadius)
-                {
-                    m_currentState = State.WAITING_FOR_TREAT;
-                    //m_animator.SetBool("Walking", false);
-                }
-                break;
-            case State.WAITING_FOR_TREAT:
-                m_WaitForTreatTimer += Time.deltaTime;
-                if (m_WaitForTreatTimer > m_WaitForTreatTime)
-                {
-                    m_currentState = State.WANDERING;
-                    m_WaitForTreatTimer = 0.0f;
-                    m_HouseSeekTimer = 0.0f;
-                }
-                break;
-            case State.SEEKING_BAIT:
-                if (CheckBaitInRange())
-                {
-                    m_currentState = State.EATING_BAIT;
-                    //m_animator.SetBool("Walking", false);
-                }
-                break;
-            case State.EATING_BAIT:
-                break;
-            case State.FLEEING:
-                m_fleeTimer += Time.deltaTime;
-                if (m_fleeTimer > m_fleeDuration)
-                {
-                    m_currentState = State.WANDERING;
-                    m_fleeTimer = 0.0f;
-                }
-                else
-                {
+            Destroy(gameObject);
+        }
+        if (isAIEnabled)
+        {
+            switch (m_currentState)
+            {
+                case State.SEEKING_HOUSE:
+                    m_agent.SetDestination(m_targetHousePosition);
+                    if (Vector3.Distance(transform.position, m_targetHousePosition) < m_GoalReachRadius)
+                    {
+                        m_currentState = State.WAITING_FOR_TREAT;
+                        //m_animator.SetBool("Walking", false);
+                    }
+                    break;
+                case State.WAITING_FOR_TREAT:
+                    m_WaitForTreatTimer += Time.deltaTime;
+                    if (m_WaitForTreatTimer > m_WaitForTreatTime)
+                    {
+                        m_currentState = State.WANDERING;
+                        m_WaitForTreatTimer = 0.0f;
+                        m_HouseSeekTimer = 0.0f;
+                    }
+                    break;
+                case State.SEEKING_BAIT:
+                    if (CheckBaitInRange())
+                    {
+                        m_currentState = State.EATING_BAIT;
+                        //m_animator.SetBool("Walking", false);
+                    }
+                    break;
+                case State.EATING_BAIT:
+                    break;
+                case State.FLEEING:
+                    m_fleeTimer += Time.deltaTime;
+                    if (m_fleeTimer > m_fleeDuration)
+                    {
+                        m_currentState = State.WANDERING;
+                        m_fleeTimer = 0.0f;
+                    }
+                    else
+                    {
+                        if (m_currentWanderUpdate == m_WanderUpdateRate)
+                        {
+                            m_currentWanderUpdate = 0;
+                            Vector3 randomPoint = GetRandomPointInFleeRadius();
+                            m_agent.SetDestination(randomPoint);
+                        }
+                        else
+                        {
+                            m_currentWanderUpdate++;
+                        }
+                    }
+                    break;
+                case State.WANDERING:
                     if (m_currentWanderUpdate == m_WanderUpdateRate)
                     {
                         m_currentWanderUpdate = 0;
-                        Vector3 randomPoint = GetRandomPointInFleeRadius();
+                        Vector3 randomPoint = GetRandomPointInWanderRadius();
                         m_agent.SetDestination(randomPoint);
                     }
                     else
                     {
                         m_currentWanderUpdate++;
                     }
-                }
-                break;
-            case State.WANDERING:
-                if (m_currentWanderUpdate == m_WanderUpdateRate)
-                {
-                    m_currentWanderUpdate = 0;
-                    Vector3 randomPoint = GetRandomPointInWanderRadius();
-                    m_agent.SetDestination(randomPoint);
-                }
-                else
-                {
-                    m_currentWanderUpdate++;
-                }
-                m_HouseSeekTimer += Time.deltaTime;
-                if (CheckHouseInRange())
-                {
-                    if (m_HouseSeekTimer > m_HouseSeekCooldown)
+                    m_HouseSeekTimer += Time.deltaTime;
+                    if (CheckHouseInRange())
                     {
-                        m_currentState = State.SEEKING_HOUSE;
-                        
+                        if (m_HouseSeekTimer > m_HouseSeekCooldown)
+                        {
+                            m_currentState = State.SEEKING_HOUSE;
+
+                        }
+                        //m_animator.SetBool("Walking", false);
                     }
-                    //m_animator.SetBool("Walking", false);
-                }
-                break;
+                    break;
+            }
         }
     }
 
