@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 5747941907414338032}
   m_LocalRotation: {x: 0.64308167, y: 0, z: 0, w: 0.7657977}
   m_LocalPosition: {x: -4.1, y: 2.209, z: -0.583}
-  m_LocalScale: {x: 35, y: 30, z: 30}
+  m_LocalScale: {x: 7, y: 7, z: 7}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -114,3 +114,4 @@ MonoBehaviour:
     m_Bits: 128
   CandyLifeTime: 0
   MaxCandyLifeTime: 40
+  Multiplier: 1
