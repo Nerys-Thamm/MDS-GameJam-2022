@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 546f694f9088654f4a31a4b4f646e13a, type: 3}
+  m_Name: DoorInteract3
+  m_EditorClassIdentifier: 
+  m_blipSound: {fileID: 0}
+  m_Phrases:
+  - m_message: Yo!
+    m_characterSprite: {fileID: 21300000, guid: 04e65708b57d653da9bc82bac5ea8b8d, type: 3}
+    m_type: 0
+    m_speed: 0.08
+    m_sfx: {fileID: 0}
+    m_blip: {fileID: 0}
+  - m_message: This kid is weird!
+    m_characterSprite: {fileID: 21300000, guid: 04e65708b57d653da9bc82bac5ea8b8d, type: 3}
+    m_type: 0
+    m_speed: 0.08
+    m_sfx: {fileID: 0}
+    m_blip: {fileID: 0}
+  - m_message: Here, have some treats, lil man!
+    m_characterSprite: {fileID: 21300000, guid: 04e65708b57d653da9bc82bac5ea8b8d, type: 3}
+    m_type: 0
+    m_speed: 0.08
+    m_sfx: {fileID: 0}
+    m_blip: {fileID: 0}
