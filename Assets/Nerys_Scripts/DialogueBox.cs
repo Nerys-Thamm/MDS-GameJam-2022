@@ -55,7 +55,7 @@ public class DialogueBox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        animator.SetBool("IsTyping", isTyping);
+        if(animator) animator.SetBool("IsTyping", isTyping);
         if (isTyping)
         {
             
