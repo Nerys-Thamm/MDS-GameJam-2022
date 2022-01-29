@@ -139,7 +139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Rigid: {fileID: 3912058265882281639}
-  m_MoveSpeed: 10
+  m_ChildSpeed: 10
+  m_MonsterSpeed: 4
   m_TurnSpeed: 360
   m_IsMovementLocked: 0
   cam: {fileID: 0}
@@ -172,7 +173,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09bbe44f7a894754a892bb0c22067aaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SpotLight: {fileID: 0}
   TransformIntoEffect: {fileID: 8508878063725926481}
   TransformOutOfEffect: {fileID: 7027889894687164535}
   CandyPrefab: {fileID: 5747941907414338032, guid: b44e90892ca1d4e4b9fbd2c1ef73090f, type: 3}
@@ -270,14 +270,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7496940505357023111, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b5a26a408ee3ec14fb06df08d0249634, type: 2}
     - target: {fileID: -4541460597810118928, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c3ae655577c83564caa1fb5121bb82f1, type: 2}
+      objectReference: {fileID: 2100000, guid: f66f04919a5e3094386c2990458c29e7, type: 2}
+    - target: {fileID: -1701428763597036413, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
+    - target: {fileID: -1206874426333947015, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f66f04919a5e3094386c2990458c29e7, type: 2}
+    - target: {fileID: -732902542895040954, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
     - target: {fileID: 919132149155446097, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
       propertyPath: m_Name
       value: PumpkinMan2
       objectReference: {fileID: 0}
+    - target: {fileID: 1153350441771775038, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
+    - target: {fileID: 1160930118108647333, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
+    - target: {fileID: 2166583429154037635, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
+    - target: {fileID: 3107101781656761520, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9337cf9fdb35b0f4aa9fcd219bd8c0da, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
 --- !u!4 &4141481355429157997 stripped
