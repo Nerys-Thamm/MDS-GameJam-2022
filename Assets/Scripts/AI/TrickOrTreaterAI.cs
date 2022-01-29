@@ -63,13 +63,9 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     public void Death()
     {
-        GetComponent<MeshFilter>().mesh = null;
-        Destroy(GetComponent<CapsuleCollider>());
-
-        if (deathEvent != null)
-        {
-            deathEvent();
-        }
+        Debug.Log("DIE!");
+        GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
         Death_Effect.Play();
         isAIEnabled = false;
         isDead = true;

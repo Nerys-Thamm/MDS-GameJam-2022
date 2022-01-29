@@ -11,7 +11,6 @@ public class MonsterMode : MonoBehaviour
     [Header("Internal Components")]
     Animator m_animator;
     PlayerMotor m_PlayerMovement;
-    [SerializeField] Light m_SpotLight;
     [SerializeField] SFX_Effect TransformIntoEffect;
     [SerializeField] SFX_Effect TransformOutOfEffect;
 
@@ -54,9 +53,8 @@ public class MonsterMode : MonoBehaviour
 
         //Get Internal Components
         m_PlayerMovement = GetComponent<PlayerMotor>();
-        m_SpotLight = GetComponentInChildren<Light>();
+ 
         m_animator = GetComponentInChildren<Animator>();
-        m_SpotLight.enabled = false;
     }
 
     void DropCandy(InputAction.CallbackContext context)
@@ -74,13 +72,11 @@ public class MonsterMode : MonoBehaviour
         if (m_IsInMonsterMode)
         {
             m_animator.SetTrigger("TriggerTransform");
-            m_SpotLight.enabled = true;
             TransformIntoEffect.Play();
         }
         else
         {
             m_animator.SetTrigger("TriggerChild");
-            m_SpotLight.enabled = false;
             TransformOutOfEffect.Play();
         }
        
@@ -100,13 +96,18 @@ public class MonsterMode : MonoBehaviour
         }
     }
 
+    public bool GetMode()
+    {
+        return m_IsInMonsterMode;
+    }
 
     void Attack(InputAction.CallbackContext context)
     {
         if (m_IsInMonsterMode)
         {
+            StartCoroutine(m_PlayerMovement.ToggleMovementLock(1.0f));
             Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-
+            Debug.Log(hitNPCs.Length);
             foreach (Collider NPC in hitNPCs)
             {
                 TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
@@ -116,7 +117,12 @@ public class MonsterMode : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
+    public void TriggerEndAnimation(InputAction.CallbackContext context)
+    {
+        m_PlayerMovement.ToggleMovementLock();
+        m_animator.SetTrigger("TriggerEnd");
+    }
+    private void FixedUpdate()
     {
         Input_SwitchMode.performed += ToggleMonsterMode;
         Input_DropCandy.performed += DropCandy;
