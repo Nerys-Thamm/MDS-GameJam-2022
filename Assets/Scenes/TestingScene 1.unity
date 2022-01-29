@@ -182,7 +182,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -332,7 +332,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -858,13 +858,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542514499}
-  m_LocalRotation: {x: 0.29612184, y: -0.4589311, z: 0.16549687, w: 0.8211607}
+  m_LocalRotation: {x: 0.3387749, y: -0.048740715, z: 0.017576572, w: 0.9394398}
   m_LocalPosition: {x: 4.87, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 39.66, y: -58.4, z: 0}
+  m_LocalEulerAnglesHint: {x: 39.66, y: -5.94, z: 0}
 --- !u!114 &542514502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -1661,7 +1661,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -2253,7 +2253,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
@@ -2606,6 +2606,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7496940505357023111, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bec90b39188ba119dabb6191a4bca57a, type: 2}
+    - target: {fileID: -4541460597810118928, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d767d0e8431b77042a5c8872fa0cf176, type: 2}
+    - target: {fileID: -1701428763597036413, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: bec90b39188ba119dabb6191a4bca57a, type: 2}
+    - target: {fileID: -1206874426333947015, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d767d0e8431b77042a5c8872fa0cf176, type: 2}
     - target: {fileID: 919132149155446097, guid: a4556da998ce3e642831bff92f8cc204, type: 3}
       propertyPath: m_Name
       value: PumpkinMan2
@@ -2814,7 +2830,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30.15
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 30
-  m_EatBaitDuration: 1
+  m_BaitEatTime: 5
   m_GoalReachRadius: 2.74
   m_WanderRadius: 2.28
   m_WanderForwardDistance: 2.35
