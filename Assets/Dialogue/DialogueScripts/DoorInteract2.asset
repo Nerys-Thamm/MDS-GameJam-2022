@@ -14,15 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_blipSound: {fileID: 0}
   m_Phrases:
+  - m_message: ....TRICKORTREAT!!!!!!!!!!
+    m_characterSprite: {fileID: 21300000, guid: 3351bd05b19bc6e26b34945fa27ebfeb, type: 3}
+    m_type: 0
+    m_speed: 0.04
+    m_sfx: {fileID: 0}
+    m_blip: {fileID: 0}
   - m_message: Nice costume, kid...
-    m_characterSprite: {fileID: 21300000, guid: 04e65708b57d653da9bc82bac5ea8b8d, type: 3}
+    m_characterSprite: {fileID: 21300000, guid: e1647e720f3c9fc7e901d823e484f8a1, type: 3}
     m_type: 0
     m_speed: 0.08
     m_sfx: {fileID: 0}
-    m_blip: {fileID: 0}
+    m_blip: {fileID: 8300000, guid: 35108166f98aa201796ebd976367b0f2, type: 3}
   - m_message: Here, have some candy.
-    m_characterSprite: {fileID: 21300000, guid: 04e65708b57d653da9bc82bac5ea8b8d, type: 3}
+    m_characterSprite: {fileID: 21300000, guid: e1647e720f3c9fc7e901d823e484f8a1, type: 3}
     m_type: 0
     m_speed: 0.08
     m_sfx: {fileID: 0}
-    m_blip: {fileID: 0}
+    m_blip: {fileID: 8300000, guid: 35108166f98aa201796ebd976367b0f2, type: 3}
