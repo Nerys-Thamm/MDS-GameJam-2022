@@ -31,7 +31,7 @@ public class MonsterMode : MonoBehaviour
     //Input Actions
     InputAction Input_SwitchMode;
     InputAction Input_DropCandy;
-
+    InputAction Input_Attack;
     float m_maxTrasnformCooldown = 10.0f;
 
     // Start is called before the first frame update
@@ -44,14 +44,18 @@ public class MonsterMode : MonoBehaviour
         Input_DropCandy = new InputAction("DropCandy", binding: "<Gamepad>/leftTrigger");
         Input_DropCandy.AddBinding("<Keyboard>/space");
 
+        Input_Attack = new InputAction("Attack", binding: "<Gamepad>/leftTrigger");
+        Input_Attack.AddBinding("<Keyboard>/space");
+
         //Enable Inputs
         Input_DropCandy.Enable();
         Input_SwitchMode.Enable();
+        Input_Attack.Enable();
 
         //Get Internal Components
         m_PlayerMovement = GetComponent<PlayerMotor>();
         m_SpotLight = GetComponentInChildren<Light>();
-
+        m_animator = GetComponentInChildren<Animator>();
         m_SpotLight.enabled = false;
     }
 
@@ -69,11 +73,13 @@ public class MonsterMode : MonoBehaviour
         m_PlayerMovement.ToggleMovementLock();
         if (m_IsInMonsterMode)
         {
+            m_animator.SetTrigger("TriggerTransform");
             m_SpotLight.enabled = true;
             TransformIntoEffect.Play();
         }
         else
         {
+            m_animator.SetTrigger("TriggerChild");
             m_SpotLight.enabled = false;
             TransformOutOfEffect.Play();
         }
@@ -95,10 +101,26 @@ public class MonsterMode : MonoBehaviour
     }
 
 
+    void Attack(InputAction.CallbackContext context)
+    {
+        if (m_IsInMonsterMode)
+        {
+            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
+
+            foreach (Collider NPC in hitNPCs)
+            {
+                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
+                thisNPC.Death();
+            }
+            m_animator.SetTrigger("Attack");
+        }
+    }
+
     private void LateUpdate()
     {
         Input_SwitchMode.performed += ToggleMonsterMode;
         Input_DropCandy.performed += DropCandy;
+        Input_Attack.performed += Attack;
     }
     // Update is called once per frame
     void Update()
@@ -111,19 +133,6 @@ public class MonsterMode : MonoBehaviour
         if (m_DropCandyCooldown > 0.0f)
         {
             m_DropCandyCooldown -= Time.deltaTime;
-        }
-
-
-
-        if (m_IsInMonsterMode)
-        {
-            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-
-            foreach (Collider NPC in hitNPCs)
-            {
-                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.Death();
-            }
         }
     }
 
