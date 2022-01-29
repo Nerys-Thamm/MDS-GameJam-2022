@@ -6,6 +6,7 @@ TagManager:
   tags:
   - House
   - Bait
+  - ScreenFade
   layers:
   - Default
   - TransparentFX

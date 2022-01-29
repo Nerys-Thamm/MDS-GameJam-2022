@@ -25,7 +25,7 @@ public class AnimatorHelper : MonoBehaviour
 
     public void EndGame()
     {
-        GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("ScreenFade");
+        GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("EndGame");
     }
     public void PlayChildStep()
     {
