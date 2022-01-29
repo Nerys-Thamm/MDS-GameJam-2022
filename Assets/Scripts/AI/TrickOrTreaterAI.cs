@@ -232,7 +232,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                         if (m_currentWanderUpdate == m_WanderUpdateRate)
                         {
                             m_currentWanderUpdate = 0;
-                            Vector3 randomPoint = GetRandomPointInFleeRadius();
+                            Vector3 randomPoint = transform.position + GetRandomPointInFleeRadius();
                             m_agent.SetDestination(randomPoint);
                         }
                         else
@@ -245,7 +245,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (m_currentWanderUpdate == m_WanderUpdateRate)
                     {
                         m_currentWanderUpdate = 0;
-                        Vector3 randomPoint = GetRandomPointInWanderRadius();
+                        Vector3 randomPoint = transform.position + GetRandomPointInWanderRadius();
                         m_agent.SetDestination(randomPoint);
                     }
                     else
