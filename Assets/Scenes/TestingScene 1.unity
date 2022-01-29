@@ -2600,7 +2600,7 @@ MonoBehaviour:
   customPasses:
   - id: 0
   - id: 1
-  injectionPoint: 2
+  injectionPoint: 1
   references:
     version: 1
     00000000:
