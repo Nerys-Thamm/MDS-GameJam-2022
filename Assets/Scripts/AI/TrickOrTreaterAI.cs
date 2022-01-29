@@ -22,9 +22,8 @@ public class TrickOrTreaterAI : MonoBehaviour
     public float m_BaitSearchRadius = 10.0f;
     public float m_BaitSearchAngle = 30.0f;
 
-    public float m_EatBaitDuration = 1.0f;
-    float m_EatBaitTimer = 0.0f;
-
+    float m_BaitEatTimer = 0.0f;
+    public float m_BaitEatTime = 5.0f;
     public float m_GoalReachRadius = 1.0f;
 
     public float m_WanderRadius = 10.0f;
@@ -51,8 +50,6 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     Vector3 m_targetHousePosition;
     Vector3 m_targetBaitPosition;
-
-    GameObject m_targetBaitObj;
 
     Transform m_playerTransform;
 
@@ -112,7 +109,6 @@ public class TrickOrTreaterAI : MonoBehaviour
                 if (angle < m_BaitSearchAngle / 2.0f)
                 {
                     m_targetBaitPosition = collider.transform.position;
-                    m_targetBaitObj = collider.gameObject;
                     return true;
                 }
             }
@@ -150,7 +146,6 @@ public class TrickOrTreaterAI : MonoBehaviour
     {
         m_agent = GetComponent<NavMeshAgent>();
         m_animator = GetComponent<Animator>();
-        m_animator.SetTrigger("Walking");
     }
 
     bool CheckPlayerInViewCone()
@@ -162,15 +157,6 @@ public class TrickOrTreaterAI : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    public void CheckIfCanSeePlayer()
-    {
-        if (CheckPlayerInViewCone())
-        {
-            m_currentState = State.FLEEING;
-            m_animator.SetTrigger("seen monster");
-        }
     }
 
     // Update is called once per frame
@@ -186,29 +172,26 @@ public class TrickOrTreaterAI : MonoBehaviour
             {
                 case State.SEEKING_HOUSE:
                     m_agent.SetDestination(m_targetHousePosition);
-                    m_animator.SetTrigger("Walking");
-                    m_agent.isStopped = false;
                     if (Vector3.Distance(transform.position, m_targetHousePosition) < m_GoalReachRadius)
                     {
                         m_currentState = State.WAITING_FOR_TREAT;
-                        m_animator.SetTrigger("Idle");
+                        //m_animator.SetBool("Walking", false);
                         m_agent.isStopped = true;
                     }
-                    else if (CheckBaitInRange())
+                    else if(CheckBaitInRange())
                     {
                         m_currentState = State.SEEKING_BAIT;
-                        m_animator.SetTrigger("Walking");
+                        m_agent.SetDestination(m_targetBaitPosition);
                         m_agent.isStopped = false;
+                        //m_animator.SetBool("Walking", false);
                     }
-                    
-                    
                     break;
                 case State.WAITING_FOR_TREAT:
                     m_WaitForTreatTimer += Time.deltaTime;
+                    m_agent.isStopped = true;
                     if (m_WaitForTreatTimer > m_WaitForTreatTime)
                     {
                         m_currentState = State.WANDERING;
-                        m_animator.SetTrigger("Walking");
                         m_agent.isStopped = false;
                         m_WaitForTreatTimer = 0.0f;
                         m_HouseSeekTimer = 0.0f;
@@ -216,21 +199,22 @@ public class TrickOrTreaterAI : MonoBehaviour
                     break;
                 case State.SEEKING_BAIT:
                     m_agent.SetDestination(m_targetBaitPosition);
+                    m_agent.isStopped = false;
                     if (Vector3.Distance(transform.position, m_targetBaitPosition) < m_GoalReachRadius)
                     {
                         m_currentState = State.EATING_BAIT;
-                        m_animator.SetTrigger("Idle");
+                        m_animator.SetBool("Walking", false);
                         m_agent.isStopped = true;
                     }
                     break;
                 case State.EATING_BAIT:
-                    m_EatBaitTimer += Time.deltaTime;
-                    if (m_EatBaitTimer > m_EatBaitDuration)
+                    m_BaitEatTimer += Time.deltaTime;
+                    m_agent.isStopped = true;
+                    if (m_BaitEatTimer > m_BaitEatTime)
                     {
                         m_currentState = State.WANDERING;
-                        m_animator.SetTrigger("Walking");
                         m_agent.isStopped = false;
-                        m_EatBaitTimer = 0.0f;
+                        m_BaitEatTimer = 0.0f;
                         m_HouseSeekTimer = 0.0f;
                     }
                     break;
@@ -239,8 +223,6 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (m_fleeTimer > m_fleeDuration)
                     {
                         m_currentState = State.WANDERING;
-                        m_animator.SetTrigger("Walking");
-                        m_agent.isStopped = false;
                         m_fleeTimer = 0.0f;
                     }
                     else
@@ -274,10 +256,14 @@ public class TrickOrTreaterAI : MonoBehaviour
                         if (m_HouseSeekTimer > m_HouseSeekCooldown)
                         {
                             m_currentState = State.SEEKING_HOUSE;
-                            m_animator.SetTrigger("Walking");
-                            m_agent.isStopped = false;
 
                         }
+                        //m_animator.SetBool("Walking", false);
+                    }
+                    else if(CheckBaitInRange())
+                    {
+                        m_currentState = State.SEEKING_BAIT;
+                        m_agent.SetDestination(m_targetBaitPosition);
                         //m_animator.SetBool("Walking", false);
                     }
                     break;
