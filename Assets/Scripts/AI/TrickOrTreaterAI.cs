@@ -146,6 +146,7 @@ public class TrickOrTreaterAI : MonoBehaviour
     {
         m_agent = GetComponent<NavMeshAgent>();
         m_animator = GetComponent<Animator>();
+        m_animator.SetTrigger("Walking");
     }
 
     bool CheckPlayerInViewCone()
@@ -175,6 +176,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (Vector3.Distance(transform.position, m_targetHousePosition) < m_GoalReachRadius)
                     {
                         m_currentState = State.WAITING_FOR_TREAT;
+                        m_animator.SetTrigger("Idle");
                         //m_animator.SetBool("Walking", false);
                         m_agent.isStopped = true;
                     }
@@ -184,6 +186,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                         m_agent.SetDestination(m_targetBaitPosition);
                         m_agent.isStopped = false;
                         //m_animator.SetBool("Walking", false);
+                        m_animator.SetTrigger("Walking");
                     }
                     break;
                 case State.WAITING_FOR_TREAT:
@@ -193,6 +196,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     {
                         m_currentState = State.WANDERING;
                         m_agent.isStopped = false;
+                        m_animator.SetTrigger("Walking");
                         m_WaitForTreatTimer = 0.0f;
                         m_HouseSeekTimer = 0.0f;
                     }
@@ -203,7 +207,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (Vector3.Distance(transform.position, m_targetBaitPosition) < m_GoalReachRadius)
                     {
                         m_currentState = State.EATING_BAIT;
-                        m_animator.SetBool("Walking", false);
+                        m_animator.SetTrigger("Idle");
                         m_agent.isStopped = true;
                     }
                     break;
@@ -213,6 +217,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (m_BaitEatTimer > m_BaitEatTime)
                     {
                         m_currentState = State.WANDERING;
+                        m_animator.SetTrigger("Walking");
                         m_agent.isStopped = false;
                         m_BaitEatTimer = 0.0f;
                         m_HouseSeekTimer = 0.0f;
@@ -223,6 +228,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (m_fleeTimer > m_fleeDuration)
                     {
                         m_currentState = State.WANDERING;
+                        m_animator.SetTrigger("Walking");
                         m_fleeTimer = 0.0f;
                     }
                     else
