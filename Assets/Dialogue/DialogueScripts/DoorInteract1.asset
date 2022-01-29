@@ -15,14 +15,14 @@ MonoBehaviour:
   m_blipSound: {fileID: 0}
   m_Phrases:
   - m_message: Ooooh you're just the cutest!
-    m_characterSprite: {fileID: 21300000, guid: 2bdce4c257773f7af9788eb93c3b019f, type: 3}
+    m_characterSprite: {fileID: 21300000, guid: 8b48c1ccd62bd96d59ea81b5e7205530, type: 3}
     m_type: 0
     m_speed: 0.08
     m_sfx: {fileID: 0}
-    m_blip: {fileID: 0}
+    m_blip: {fileID: 8300000, guid: dc91b9faa64f8b7e49dc5272c6239754, type: 3}
   - m_message: What are you supposed to be?
-    m_characterSprite: {fileID: 21300000, guid: 2bdce4c257773f7af9788eb93c3b019f, type: 3}
+    m_characterSprite: {fileID: 21300000, guid: 8b48c1ccd62bd96d59ea81b5e7205530, type: 3}
     m_type: 0
     m_speed: 0.08
     m_sfx: {fileID: 0}
-    m_blip: {fileID: 0}
+    m_blip: {fileID: 8300000, guid: dc91b9faa64f8b7e49dc5272c6239754, type: 3}
