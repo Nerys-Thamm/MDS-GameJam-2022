@@ -21,17 +21,29 @@ public class MonsterMode : MonoBehaviour
     [SerializeField] Transform m_SpherePoint;
     [SerializeField] float m_SphereCastRadius;
     [SerializeField] LayerMask m_EatableLayerMask;
+
+    [SerializeField] float m_CurrentHealth;
+    [SerializeField] float m_MaxHealth = 120f;
+    [Header("CoolDowns")]
     [SerializeField] float m_transformCooldown;
     [SerializeField] float m_DropCandyCooldown;
+    [SerializeField] float m_AttackCooldown;
+
     [SerializeField] float m_MaxDropCandyCooldown = 1.5f;
+    [SerializeField] float m_maxTrasnformCooldown = 2.5f;
+    [SerializeField] float m_MaxAttackCooldown = 0.5f;
 
     [SerializeField] Transform m_CandyDropPoint;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip m_DropCandy;
+
     //Input Actions
-    InputAction Input_SwitchMode;
+    public InputAction Input_SwitchMode;
     InputAction Input_DropCandy;
     InputAction Input_Attack;
-    float m_maxTrasnformCooldown = 10.0f;
+
+ 
 
     // Start is called before the first frame update
     void Start()
@@ -53,14 +65,17 @@ public class MonsterMode : MonoBehaviour
 
         //Get Internal Components
         m_PlayerMovement = GetComponent<PlayerMotor>();
- 
+        audioSource = GetComponent<AudioSource>();
         m_animator = GetComponentInChildren<Animator>();
+
+        m_CurrentHealth = m_MaxHealth;
     }
 
     void DropCandy(InputAction.CallbackContext context)
     {
         if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f)
         {
+            audioSource.PlayOneShot(m_DropCandy);
             Instantiate(CandyPrefab, m_CandyDropPoint.position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f),0.0f));
             m_DropCandyCooldown = m_MaxDropCandyCooldown;
         }
@@ -103,25 +118,23 @@ public class MonsterMode : MonoBehaviour
 
     public void CalculateAttack()
     {
-        Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
+        if (m_AttackCooldown <= 0)
+        {
+            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
             Debug.Log(hitNPCs.Length);
             foreach (Collider NPC in hitNPCs)
             {
                 TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
                 thisNPC.Death();
             }
+            m_AttackCooldown = m_MaxAttackCooldown;
+        }
+       
     }
     public void Attack(InputAction.CallbackContext context)
     {
         if (m_IsInMonsterMode)
         {
-           /* Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-            Debug.Log(hitNPCs.Length);
-            foreach (Collider NPC in hitNPCs)
-            {
-                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.Death();
-            }*/
             m_animator.SetTrigger("Attack");
         }
     }
@@ -140,11 +153,22 @@ public class MonsterMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_IsInMonsterMode)
+        {
+            m_CurrentHealth -= 2 * Time.deltaTime;
+        }
+        else
+        {
+            m_CurrentHealth -= Time.deltaTime;
+        }
         if (m_transformCooldown > 0.0f)
         {
             m_transformCooldown -= Time.deltaTime;
         }
-
+        if (m_AttackCooldown > 0.0f)
+        {
+            m_AttackCooldown -= Time.deltaTime;
+        }
         if (m_DropCandyCooldown > 0.0f)
         {
             m_DropCandyCooldown -= Time.deltaTime;
