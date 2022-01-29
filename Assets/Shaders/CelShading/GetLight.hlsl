@@ -22,6 +22,7 @@ void GetLight_float(out float3 lightDir, out float3 color)
         lightDir = float3(1, 0, 0);
         color = 0;
     }
+    
 #endif
 }
 

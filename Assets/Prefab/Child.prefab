@@ -535,7 +535,7 @@ Transform:
   m_GameObject: {fileID: 3266096313540649545}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children:
   - {fileID: 6532617170392066157}
   - {fileID: 9152648920697867007}
@@ -578,7 +578,7 @@ MonoBehaviour:
   m_HouseSearchAngle: 30
   m_BaitSearchRadius: 5.38
   m_BaitSearchAngle: 90
-  m_BaitEatTime: 5
+  m_BaitEatTime: 3
   m_GoalReachRadius: 1.89
   m_WanderRadius: 3.45
   m_WanderForwardDistance: 3.58
@@ -1104,6 +1104,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 671ee92960d40b845a5414ef70e2fe35, type: 3}
+--- !u!1 &95385241769582332 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2276572465930938080, guid: 671ee92960d40b845a5414ef70e2fe35, type: 3}
+  m_PrefabInstance: {fileID: 2218835113666557980}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6489524746927772437 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4955523750507227913, guid: 671ee92960d40b845a5414ef70e2fe35, type: 3}
@@ -1117,10 +1122,5 @@ ParticleSystem:
 --- !u!198 &1136863183499314070 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 1228376372409301898, guid: 671ee92960d40b845a5414ef70e2fe35, type: 3}
-  m_PrefabInstance: {fileID: 2218835113666557980}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &95385241769582332 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2276572465930938080, guid: 671ee92960d40b845a5414ef70e2fe35, type: 3}
   m_PrefabInstance: {fileID: 2218835113666557980}
   m_PrefabAsset: {fileID: 0}

@@ -156,6 +156,16 @@ public class TrickOrTreaterAI : MonoBehaviour
         return false;
     }
 
+    public void Scare()
+    {
+        if(CheckPlayerInViewCone())
+        {
+            m_currentState = State.FLEEING;
+            m_animator.SetTrigger("seen monster");
+            m_fleeTimer = 0.0f;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -203,7 +213,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (Vector3.Distance(transform.position, m_targetBaitPosition) < m_GoalReachRadius)
                     {
                         m_currentState = State.EATING_BAIT;
-                        m_animator.SetTrigger("Idle");
+                        m_animator.SetTrigger("Eat candy");
                         m_agent.isStopped = true;
                     }
                     break;
@@ -232,7 +242,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                         if (m_currentWanderUpdate == m_WanderUpdateRate)
                         {
                             m_currentWanderUpdate = 0;
-                            Vector3 randomPoint = GetRandomPointInFleeRadius();
+                            Vector3 randomPoint = transform.position + GetRandomPointInFleeRadius();
                             m_agent.SetDestination(randomPoint);
                         }
                         else
@@ -245,7 +255,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     if (m_currentWanderUpdate == m_WanderUpdateRate)
                     {
                         m_currentWanderUpdate = 0;
-                        Vector3 randomPoint = GetRandomPointInWanderRadius();
+                        Vector3 randomPoint = transform.position + GetRandomPointInWanderRadius();
                         m_agent.SetDestination(randomPoint);
                     }
                     else
