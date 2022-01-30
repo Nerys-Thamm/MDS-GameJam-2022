@@ -43,7 +43,7 @@ public class MonsterMode : MonoBehaviour
 
     //Input Actions
     public InputAction Input_SwitchMode;
-    InputAction Input_DropCandy;
+    public InputAction Input_DropCandy;
     InputAction Input_Attack;
 
  
@@ -128,9 +128,6 @@ public class MonsterMode : MonoBehaviour
             TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
             thisNPC.Death();
         }
-
-
-
     }
 
 
