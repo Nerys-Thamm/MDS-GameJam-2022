@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AnimatorHelper : MonoBehaviour
 {
@@ -25,7 +26,12 @@ public class AnimatorHelper : MonoBehaviour
 
     public void EndGame()
     {
-        GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("ScreenFade");
+        GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("EndGame");
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
     public void PlayChildStep()
     {

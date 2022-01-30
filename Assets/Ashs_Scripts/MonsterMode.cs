@@ -121,26 +121,25 @@ public class MonsterMode : MonoBehaviour
 
     public void CalculateAttack()
     {
-        if (m_AttackCooldown <= 0)
+        Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
+        Debug.Log(hitNPCs.Length);
+        foreach (Collider NPC in hitNPCs)
         {
-            Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-            Debug.Log(hitNPCs.Length);
-            foreach (Collider NPC in hitNPCs)
-            {
-                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.Death();
-            }
-            m_AttackCooldown = m_MaxAttackCooldown;
+            TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
+            thisNPC.Death();
         }
-       
+
+
+
     }
 
 
     public void Attack(InputAction.CallbackContext context)
     {
-        if (m_IsInMonsterMode)
+        if (m_IsInMonsterMode && m_AttackCooldown <= 0)
         {
             m_animator.SetTrigger("Attack");
+            m_AttackCooldown = m_MaxAttackCooldown;
         }
     }
 
