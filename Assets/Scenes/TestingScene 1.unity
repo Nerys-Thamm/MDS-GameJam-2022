@@ -6916,6 +6916,8 @@ MonoBehaviour:
   m_fleeDuration: 5
   m_fleeTimer: 0
   isAIEnabled: 1
+  m_animator: {fileID: 0}
+  m_indicator: {fileID: 0}
   m_currentState: 2
   Death_Effect: {fileID: 301358587}
 --- !u!95 &328356045
@@ -7147,6 +7149,8 @@ MonoBehaviour:
   m_fleeDuration: 5
   m_fleeTimer: 0
   isAIEnabled: 1
+  m_animator: {fileID: 0}
+  m_indicator: {fileID: 0}
   m_currentState: 2
   Death_Effect: {fileID: 984803849}
 --- !u!95 &346776753
@@ -12332,6 +12336,8 @@ MonoBehaviour:
   m_fleeDuration: 5
   m_fleeTimer: 0
   isAIEnabled: 1
+  m_animator: {fileID: 0}
+  m_indicator: {fileID: 0}
   m_currentState: 2
   Death_Effect: {fileID: 886628424}
 --- !u!95 &421895221
@@ -47063,6 +47069,8 @@ MonoBehaviour:
   m_fleeDuration: 5
   m_fleeTimer: 0
   isAIEnabled: 1
+  m_animator: {fileID: 0}
+  m_indicator: {fileID: 0}
   m_currentState: 2
   Death_Effect: {fileID: 1168494667}
 --- !u!95 &1467352545
