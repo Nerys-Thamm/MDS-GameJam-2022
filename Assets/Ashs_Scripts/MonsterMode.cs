@@ -5,9 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Rendering;
 
 public class MonsterMode : MonoBehaviour
 {
+    public VolumeProfile m_VolumeProfile;
     //Components
     [Header("Internal Components")]
     Animator m_animator;
@@ -85,7 +88,7 @@ public class MonsterMode : MonoBehaviour
             CandyCount--;
         }
     }
-
+    
     IEnumerator TransformCoroutine()
     {
         m_PlayerMovement.ToggleMovementLock();
@@ -98,6 +101,8 @@ public class MonsterMode : MonoBehaviour
         {
             m_animator.SetTrigger("TriggerChild");
             TransformOutOfEffect.Play();
+            
+
         }
        
         yield return new WaitForSeconds(1.5f);
