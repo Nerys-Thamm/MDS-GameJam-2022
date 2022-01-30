@@ -31,6 +31,11 @@ public class DoorInteract : MonoBehaviour
         if (Vector3.Distance(playerTransform.position, transform.position) < 2.5f && playerTransform.gameObject.GetComponent<MonsterMode>().GetMode() == false)
         {
             FindObjectOfType<DialogueBox>().StartDialogue((Visited ? dialogueScriptVisited[RandomInt] : dialogueScripts[RandomInt]));
+            if(!Visited)
+            {
+                Visited = true;
+                FindObjectOfType<MonsterMode>().CandyCount += Random.Range(1, 3);
+            }
         }
     }
 }
