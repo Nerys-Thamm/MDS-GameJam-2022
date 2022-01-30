@@ -32,6 +32,11 @@ public class PlayerMotor : MonoBehaviour
         m_IsMovementLocked = !m_IsMovementLocked;
     }
 
+    public void SetMovementLock(bool _isLocked)
+    {
+        m_IsMovementLocked = _isLocked;
+    }
+
     public IEnumerator ToggleMovementLock(float _Time)
     {
         m_IsMovementLocked = true;
