@@ -23,6 +23,8 @@ public class MonsterMode : MonoBehaviour
     [SerializeField] float m_SphereCastRadius;
     [SerializeField] LayerMask m_EatableLayerMask;
 
+    [SerializeField] float m_TerrorRadius = 5.0f;
+
     [SerializeField] float m_TimeLeft = 300.0f;
 
     public int CandyCount = 10;
@@ -105,6 +107,12 @@ public class MonsterMode : MonoBehaviour
     {
         if (m_transformCooldown <= 0.0f)
         {
+            Collider[] hitColldier = Physics.OverlapSphere(transform.position, m_TerrorRadius, m_EatableLayerMask);
+
+            foreach (Collider NPC in hitColldier)
+            {
+                NPC.GetComponent<TrickOrTreaterAI>().Scare();
+            }
             m_IsInMonsterMode = !m_IsInMonsterMode;
             StartCoroutine(TransformCoroutine());
             m_transformCooldown = m_maxTrasnformCooldown;
@@ -128,9 +136,6 @@ public class MonsterMode : MonoBehaviour
             TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
             thisNPC.Death();
         }
-
-
-
     }
 
 
@@ -183,5 +188,8 @@ public class MonsterMode : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(m_SpherePoint.position, m_SphereCastRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, m_TerrorRadius);
     }
 }

@@ -11,6 +11,8 @@ public class AnimatorHelper : MonoBehaviour
     [SerializeField] List<AudioClip> m_MonsterSteps;
     [SerializeField] List<AudioClip> m_ChildSteps;
     [SerializeField] AudioClip m_AttackSound;
+    [SerializeField] AudioClip m_PopOutOfGround;
+
 
     [SerializeField] AudioSource m_AudioSource;
 
@@ -29,6 +31,11 @@ public class AnimatorHelper : MonoBehaviour
         GameObject.FindGameObjectWithTag("ScreenFade").GetComponent<Animator>().SetTrigger("EndGame");
     }
 
+    public void PlayInitalAudio()
+    {
+        m_AudioSource.PlayOneShot(m_PopOutOfGround);
+    }
+    
     public void NextLevel()
     {
         SceneManager.LoadScene("MainMenu");
