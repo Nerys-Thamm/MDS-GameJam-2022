@@ -77,12 +77,7 @@ public class PlayerMotor : MonoBehaviour
     }
 
 
-   /* IEnumerator SpawnCoroutine()
-    {
-        m_ChildSpeed = 0.0f;
-        yield return new WaitForSeconds(m_animator.GetCurrentAnimatorClipInfo(0).Length);
-        m_ChildSpeed = 10.0f;
-    }*/
+  
 
     // Start is called before the first frame update
     void Start()
@@ -105,7 +100,7 @@ public class PlayerMotor : MonoBehaviour
         m_MonsterMode = GetComponent<MonsterMode>();
         m_animator = GetComponentInChildren<Animator>();
 
-       //StartCoroutine(SpawnCoroutine());
+      /* //StartCoroutine(SpawnCoroutine());*/
     }
 
     void FixedUpdate()
