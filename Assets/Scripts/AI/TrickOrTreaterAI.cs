@@ -160,6 +160,11 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     public void Scare()
     {
+        if(m_currentState == State.FLEEING)
+        {
+            m_fleeTimer = 0;
+            return;
+        }
         m_currentState = State.FLEEING;
         m_animator.SetTrigger("seen monster");
         m_fleeTimer = 0.0f;
@@ -180,6 +185,14 @@ public class TrickOrTreaterAI : MonoBehaviour
         }
         if (isAIEnabled)
         {
+            if(m_currentState == State.FLEEING)
+            {
+                m_agent.speed = 5.0f;
+            }
+            else
+            {
+                m_agent.speed = 3.0f;
+            }
             switch (m_currentState)
             {
                 case State.SEEKING_HOUSE:
