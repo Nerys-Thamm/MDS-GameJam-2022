@@ -128,9 +128,6 @@ public class MonsterMode : MonoBehaviour
             TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
             thisNPC.Death();
         }
-
-
-
     }
 
 
