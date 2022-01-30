@@ -29,8 +29,6 @@ public class MonsterMode : MonoBehaviour
 
     [SerializeField] float m_TerrorRadius = 5.0f;
 
-    [SerializeField] float m_TimeLeft = 300.0f;
-
     public int CandyCount = 10;
 
     [Header("CoolDowns")]

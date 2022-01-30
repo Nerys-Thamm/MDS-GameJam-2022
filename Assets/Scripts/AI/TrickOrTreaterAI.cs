@@ -65,10 +65,17 @@ public class TrickOrTreaterAI : MonoBehaviour
     public void Death()
     {
         Debug.Log("DIE!");
-        GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-        GetComponent<CapsuleCollider>().enabled = false;
         Death_Effect.Play();
+        GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+
+        MeshRenderer[] meshRenderers = GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderers)
+        {
+            mesh.enabled = false;
+        }
+        GetComponent<CapsuleCollider>().enabled = false;
         isAIEnabled = false;
+        
         isDead = true;
     }
 
@@ -169,19 +176,19 @@ public class TrickOrTreaterAI : MonoBehaviour
         m_animator.SetTrigger("seen monster");
         m_fleeTimer = 0.0f;
         Debug.Log(gameObject.name + m_currentState);
-       /* if (CheckPlayerInViewCone())
-        {
-            
-            
-        }*/
     }
 
+    IEnumerator DeathCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(gameObject);
+    }
     // Update is called once per frame
     void Update()
     {
         if (isDead && !Death_Effect.m_effectsList[0].m_particle.isPlaying)
         {
-            Destroy(gameObject);
+            StartCoroutine(DeathCoroutine());
         }
         if (isAIEnabled)
         {
