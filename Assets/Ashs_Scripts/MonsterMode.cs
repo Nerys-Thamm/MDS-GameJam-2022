@@ -207,7 +207,18 @@ public class MonsterMode : MonoBehaviour
         {
             m_DropCandyCooldown -= Time.deltaTime;
         }
+
+        if(m_IsInMonsterMode)
+        {
+            Collider[] hitColldier = Physics.OverlapSphere(transform.position, m_TerrorRadius, m_EatableLayerMask);
+
+            foreach (Collider NPC in hitColldier)
+            {
+                NPC.GetComponent<TrickOrTreaterAI>().Scare();
+            }
+        }
     }
+    
 
     private void OnDrawGizmos()
     {
