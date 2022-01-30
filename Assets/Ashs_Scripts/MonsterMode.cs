@@ -12,6 +12,7 @@ public class MonsterMode : MonoBehaviour
     [Header("Internal Components")]
     Animator m_animator;
     PlayerMotor m_PlayerMovement;
+    Gamemanager m_Gamemanager;
     [SerializeField] SFX_Effect TransformIntoEffect;
     [SerializeField] SFX_Effect TransformOutOfEffect;
 
@@ -72,7 +73,7 @@ public class MonsterMode : MonoBehaviour
         m_PlayerMovement = GetComponent<PlayerMotor>();
         audioSource = GetComponent<AudioSource>();
         m_animator = GetComponentInChildren<Animator>();
-
+        m_Gamemanager = GameObject.FindGameObjectWithTag("GameController").GetComponent<Gamemanager>();
     }
 
     void DropCandy(InputAction.CallbackContext context)
@@ -88,7 +89,7 @@ public class MonsterMode : MonoBehaviour
 
     IEnumerator TransformCoroutine()
     {
-        m_PlayerMovement.ToggleMovementLock();
+        m_PlayerMovement.SetMovementLock(true);
         if (m_IsInMonsterMode)
         {
             m_animator.SetTrigger("TriggerTransform");
@@ -101,8 +102,9 @@ public class MonsterMode : MonoBehaviour
         }
        
         yield return new WaitForSeconds(1.5f);
-        m_PlayerMovement.ToggleMovementLock();
+        m_PlayerMovement.SetMovementLock(false);
     }
+
     void ToggleMonsterMode(InputAction.CallbackContext context)
     {
         if (m_transformCooldown <= 0.0f)
@@ -135,8 +137,10 @@ public class MonsterMode : MonoBehaviour
         {
             TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
             thisNPC.Death();
+            m_Gamemanager.Kidsmunched++;
         }
     }
+
 
 
     public void Attack(InputAction.CallbackContext context)
@@ -145,12 +149,13 @@ public class MonsterMode : MonoBehaviour
         {
             m_animator.SetTrigger("Attack");
             m_AttackCooldown = m_MaxAttackCooldown;
+            m_PlayerMovement.SetMovementLock(true);
         }
     }
 
     public void TriggerEndAnimation()
     {
-        m_PlayerMovement.ToggleMovementLock();
+        m_PlayerMovement.SetMovementLock(true);
         m_animator.SetTrigger("TriggerEnd");
     }
     private void FixedUpdate()
@@ -177,6 +182,11 @@ public class MonsterMode : MonoBehaviour
         if (m_AttackCooldown > 0.0f)
         {
             m_AttackCooldown -= Time.deltaTime;
+            m_PlayerMovement.SetMovementLock(true);
+        }
+        else
+        {
+            m_PlayerMovement.SetMovementLock(false); // sinful coding
         }
         if (m_DropCandyCooldown > 0.0f)
         {

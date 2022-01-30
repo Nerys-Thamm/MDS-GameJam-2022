@@ -37,12 +37,12 @@ public class PlayerMotor : MonoBehaviour
         m_IsMovementLocked = _isLocked;
     }
 
-    public IEnumerator ToggleMovementLock(float _Time)
+    /*public IEnumerator ToggleMovementLock(float _Time)
     {
         m_IsMovementLocked = true;
         yield return new WaitForSeconds(_Time);
         m_IsMovementLocked = false;
-    }
+    }*/
     void ProcessInput()
     {
         m_MovementDelta = Movement.ReadValue<Vector2>();
@@ -110,13 +110,13 @@ public class PlayerMotor : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        if (!m_IsMovementLocked)
-            ProcessInput();
+       
     }
 
     void Update()
     {
+        if (!m_IsMovementLocked)
+            ProcessInput();
         Look();
     }
 }
