@@ -51,6 +51,7 @@ public class MonsterMode : MonoBehaviour
     public InputAction Input_SwitchMode;
     public InputAction Input_DropCandy;
     InputAction Input_Attack;
+    public InputAction Input_EndGame;
 
  
 
@@ -60,6 +61,8 @@ public class MonsterMode : MonoBehaviour
         //Bind Action Inputs
         Input_SwitchMode = new InputAction("MonsterMode", binding: "<Gamepad>/rightTrigger");
         Input_SwitchMode.AddBinding("<Keyboard>/leftShift");
+
+        Input_EndGame = new InputAction("EndGame", binding: "<KeyBoard>/k");
 
         Input_DropCandy = new InputAction("DropCandy", binding: "<Gamepad>/leftTrigger");
         Input_DropCandy.AddBinding("<Keyboard>/space");
@@ -158,7 +161,7 @@ public class MonsterMode : MonoBehaviour
         }
     }
 
-    public void TriggerEndAnimation()
+    public void TriggerEndAnimation(InputAction.CallbackContext context)
     {
         m_PlayerMovement.SetMovementLock(true);
         m_animator.SetTrigger("TriggerEnd");
@@ -172,14 +175,21 @@ public class MonsterMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (m_TimeLeft > 0.0f)
+        Debug.Log(Input_EndGame.enabled);
+        if (!Input_EndGame.enabled && m_Gamemanager.Kidsmunched == m_Gamemanager.KidsMunchedGoal)
+        {
+            Input_EndGame.Enable();
+            Input_EndGame.performed += TriggerEndAnimation;
+        }
+
+        /*if (m_TimeLeft > 0.0f)
         {
             m_TimeLeft -= Time.deltaTime;
         }
         else if(m_TimeLeft <= 0.0f)
         {
             TriggerEndAnimation();
-        }
+        }*/
         if (m_transformCooldown > 0.0f)
         {
             m_transformCooldown -= Time.deltaTime;

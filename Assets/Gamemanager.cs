@@ -11,6 +11,7 @@ public class Gamemanager : MonoBehaviour
     MonsterMode m_Monstermode;
 
     public int Kidsmunched = 0;
+    public int KidsMunchedGoal = 25;
 
     public TMP_Text m_KidsMuchedText;
     public TMP_Text m_CandyCollectedText;
