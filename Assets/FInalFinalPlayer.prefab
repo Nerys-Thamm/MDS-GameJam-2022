@@ -130,7 +130,7 @@ MonoBehaviour:
   m_AttackCooldown: 0
   m_MaxDropCandyCooldown: 1.5
   m_maxTrasnformCooldown: 2.5
-  m_MaxAttackCooldown: 1.5
+  m_MaxAttackCooldown: 2.5
   m_CandyDropPoint: {fileID: 69202436361235340}
   m_DropCandy: {fileID: 8300000, guid: 4700d58e429a4914193be090bbf13bb8, type: 3}
   Input_SwitchMode:
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_ChildSpeed: 4
   m_MonsterSpeed: 2
   m_TurnSpeed: 24
-  m_IsMovementLocked: 1
+  m_IsMovementLocked: 0
   cam: {fileID: 0}
   camTransform: {fileID: 0}
 --- !u!54 &69202437043271426
