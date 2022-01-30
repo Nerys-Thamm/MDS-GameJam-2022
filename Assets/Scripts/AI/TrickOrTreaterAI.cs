@@ -140,6 +140,7 @@ public class TrickOrTreaterAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_playerTransform = GameObject.FindWithTag("Player").transform;
         m_agent = GetComponent<NavMeshAgent>();
         m_animator = GetComponent<Animator>();
         m_animator.SetTrigger("Walking");
@@ -158,12 +159,15 @@ public class TrickOrTreaterAI : MonoBehaviour
 
     public void Scare()
     {
-        if(CheckPlayerInViewCone())
+        m_currentState = State.FLEEING;
+        m_animator.SetTrigger("seen monster");
+        m_fleeTimer = 0.0f;
+        Debug.Log(gameObject.name + m_currentState);
+       /* if (CheckPlayerInViewCone())
         {
-            m_currentState = State.FLEEING;
-            m_animator.SetTrigger("seen monster");
-            m_fleeTimer = 0.0f;
-        }
+            
+            
+        }*/
     }
 
     // Update is called once per frame
