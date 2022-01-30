@@ -43,7 +43,8 @@ public class TrickOrTreaterAI : MonoBehaviour
     public bool isAIEnabled = true;
     //Components
     NavMeshAgent m_agent;
-    Animator m_animator;
+    public Animator m_animator;
+    public Animator m_indicator;
 
     //State Variables
     public State m_currentState = State.WANDERING;
@@ -182,6 +183,7 @@ public class TrickOrTreaterAI : MonoBehaviour
             switch (m_currentState)
             {
                 case State.SEEKING_HOUSE:
+                    
                     m_agent.SetDestination(m_targetHousePosition);
                     if (Vector3.Distance(transform.position, m_targetHousePosition) < m_GoalReachRadius)
                     {
@@ -212,6 +214,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     }
                     break;
                 case State.SEEKING_BAIT:
+                    m_indicator.SetBool("InLureState", true);
                     m_agent.SetDestination(m_targetBaitPosition);
                     m_agent.isStopped = false;
                     if (Vector3.Distance(transform.position, m_targetBaitPosition) < m_GoalReachRadius)
@@ -226,6 +229,7 @@ public class TrickOrTreaterAI : MonoBehaviour
                     m_agent.isStopped = true;
                     if (m_BaitEatTimer > m_BaitEatTime)
                     {
+                        m_indicator.SetBool("InLureState", false);
                         m_currentState = State.WANDERING;
                         m_animator.SetTrigger("Walking");
                         m_agent.isStopped = false;
@@ -234,9 +238,11 @@ public class TrickOrTreaterAI : MonoBehaviour
                     }
                     break;
                 case State.FLEEING:
+                    m_indicator.SetBool("InFearState", true);
                     m_fleeTimer += Time.deltaTime;
                     if (m_fleeTimer > m_fleeDuration)
                     {
+                        m_indicator.SetBool("InFearState", false);
                         m_currentState = State.WANDERING;
                         m_animator.SetTrigger("Walking");
                         m_fleeTimer = 0.0f;
