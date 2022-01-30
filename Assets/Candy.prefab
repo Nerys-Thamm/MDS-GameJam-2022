@@ -108,10 +108,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d44b626f1aba50d49ba7095826e43b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CandyRadius: 5
+  CandyRadius: 1
   NPCmask:
     serializedVersion: 2
     m_Bits: 128
   CandyLifeTime: 0
-  MaxCandyLifeTime: 10
+  MaxCandyLifeTime: 40
   Multiplier: 0.1
