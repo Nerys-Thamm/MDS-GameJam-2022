@@ -100,11 +100,17 @@ public class DialogueBox : MonoBehaviour
         if (phraseQueue != null && phraseQueue.Count > 0)
         {
             dialogueBox.SetActive(true);
+            FindObjectOfType<PlayerMotor>().SetMovementLock(true);
+            FindObjectOfType<MonsterMode>().Input_SwitchMode.Disable();
+            FindObjectOfType<MonsterMode>().Input_DropCandy.Disable();
             SetDialogue(phraseQueue.Dequeue());
             
         }
         else
         {
+            FindObjectOfType<PlayerMotor>().SetMovementLock(false);
+            FindObjectOfType<MonsterMode>().Input_SwitchMode.Enable();
+            FindObjectOfType<MonsterMode>().Input_DropCandy.Enable();
             dialogueBox.SetActive(false);
         }
     }

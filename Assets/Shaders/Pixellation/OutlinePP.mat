@@ -147,9 +147,9 @@ Material:
     - _Anisotropy: 0
     - _BlendMode: 0
     - _CoatMask: 0
-    - _ColStr: 24.25
-    - _ColThickness: 1.2
-    - _ColThreshhold: 1.06
+    - _ColStr: 25.12
+    - _ColThickness: 1.8
+    - _ColThreshhold: 2.27
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
@@ -164,9 +164,9 @@ Material:
     - _DisplacementMode: 0
     - _DoubleSidedEnable: 0
     - _DoubleSidedNormalMode: 1
-    - _DpthStr: 4.26
+    - _DpthStr: 14.81
     - _DpthThickness: 0.27
-    - _DpthThreshhold: 0.08
+    - _DpthThreshhold: 0.1
     - _DstBlend: 0
     - _EmissiveColorMode: 1
     - _EmissiveExposureWeight: 1

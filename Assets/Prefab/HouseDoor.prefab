@@ -83,9 +83,27 @@ MonoBehaviour:
     m_Id: 54dd1fa0-8144-4421-b109-7ffeb1381a12
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
-  dialogueScripts: []
-  dialogueScriptVisited: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 47f30f40-dfa7-496f-ac2f-f149c85301f4
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Interact
+      m_Flags: 0
+  dialogueScripts:
+  - {fileID: 11400000, guid: d4a517db26a8946a09ed01d1ab818918, type: 2}
+  - {fileID: 11400000, guid: 2b5fdc69cbc9519eeb7e2ca0fd8dfc02, type: 2}
+  - {fileID: 11400000, guid: 526fed8d6867fedd2ae2715c41cd8b93, type: 2}
+  - {fileID: 11400000, guid: 7dc921cc5da29a52789d69f129107f83, type: 2}
+  - {fileID: 11400000, guid: 5629be2964f01d5d39296de3f14b6c7a, type: 2}
+  dialogueScriptVisited:
+  - {fileID: 11400000, guid: 1d57b94d279bd78ddb29c63fcf9f5643, type: 2}
+  - {fileID: 11400000, guid: 1d57b94d279bd78ddb29c63fcf9f5643, type: 2}
+  - {fileID: 11400000, guid: 1d57b94d279bd78ddb29c63fcf9f5643, type: 2}
+  - {fileID: 11400000, guid: 1d57b94d279bd78ddb29c63fcf9f5643, type: 2}
+  - {fileID: 11400000, guid: 1d57b94d279bd78ddb29c63fcf9f5643, type: 2}
   Visited: 0
 --- !u!65 &8736252368381979938
 BoxCollider:
