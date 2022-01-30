@@ -1,27 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Gamemanager : MonoBehaviour
 {
-    public int KidsEaten;
+    GameObject[] m_KidsList;
 
-    public void OnNPCDeath()
-    {
-        KidsEaten++;
-        FindObjectOfType<TrickOrTreaterAI>().deathEvent -= OnNPCDeath;
-    }
+    MonsterMode m_Monstermode;
 
-    // Start is called before the first frame update
-    void Start()
+    public int Kidsmunched = 0;
+
+    public TMP_Text m_KidsMuchedText;
+    public TMP_Text m_CandyCollectedText;
+
+    private void Start()
     {
-        FindObjectOfType<TrickOrTreaterAI>().deathEvent += OnNPCDeath;
-        KidsEaten = 0;
+        m_KidsList = GameObject.FindGameObjectsWithTag("NPC");
+        m_Monstermode = FindObjectOfType<MonsterMode>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        m_KidsMuchedText.text = Kidsmunched.ToString();
+        m_CandyCollectedText.text = m_Monstermode.CandyCount.ToString();
     }
 }

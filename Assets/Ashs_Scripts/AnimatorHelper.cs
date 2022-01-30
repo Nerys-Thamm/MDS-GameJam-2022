@@ -56,7 +56,7 @@ public class AnimatorHelper : MonoBehaviour
         m_AudioSource.PlayOneShot(m_AttackSound);
         m_MosnterMode.CalculateAttack();
     }
-    public void ToggleMovementLock()
+    public void SetMovementLock()
     {
         m_PlayerMotor.ToggleMovementLock();
     }
