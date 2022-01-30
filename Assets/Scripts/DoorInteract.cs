@@ -28,7 +28,7 @@ public class DoorInteract : MonoBehaviour
 
     void InteractCallback(InputAction.CallbackContext context)
     {
-        if (Vector3.Distance(playerTransform.position, transform.position) < 2.5f)
+        if (Vector3.Distance(playerTransform.position, transform.position) < 2.5f && playerTransform.gameObject.GetComponent<MonsterMode>().GetMode() == false)
         {
             FindObjectOfType<DialogueBox>().StartDialogue((Visited ? dialogueScriptVisited[RandomInt] : dialogueScripts[RandomInt]));
         }

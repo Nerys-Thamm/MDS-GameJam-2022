@@ -43,7 +43,7 @@ public class MonsterMode : MonoBehaviour
 
     //Input Actions
     public InputAction Input_SwitchMode;
-    InputAction Input_DropCandy;
+    public InputAction Input_DropCandy;
     InputAction Input_Attack;
 
  
