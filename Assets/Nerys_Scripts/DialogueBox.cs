@@ -41,7 +41,8 @@ public class DialogueBox : MonoBehaviour
             {
                 text.text = dialogueString;
                 isTyping = false;
-                blipSource.Stop();
+                if(blipSource)
+                    blipSource.Stop();
             }
             else
             {
@@ -117,6 +118,7 @@ public class DialogueBox : MonoBehaviour
 
     public void StartDialogue(DialogueScript dialogue)
     {
+        if(dialogueBox.activeSelf) return;
         
         phraseQueue = new Queue<DialogueScript.Phrase>(dialogue.m_Phrases);
         NextPhrase();
