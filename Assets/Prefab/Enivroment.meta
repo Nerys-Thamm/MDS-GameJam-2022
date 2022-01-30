@@ -1,7 +1,12 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Prefab/Enivroment.meta
 guid: f5919205c19016a43b385b66f577321e
 folderAsset: yes
 DefaultImporter:
+=======
+guid: 306a4e89e0934854a9aea974df91e95a
+PrefabImporter:
+>>>>>>> e966f095409e17b203da0bc26e0adbc0b9065228:Assets/Prefab/Child ghost.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
