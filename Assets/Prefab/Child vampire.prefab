@@ -692,7 +692,7 @@ GameObject:
   - component: {fileID: 3266096313540649546}
   - component: {fileID: 8969236051279660272}
   m_Layer: 7
-  m_Name: child vampire
+  m_Name: Child vampire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -707,7 +707,7 @@ Transform:
   m_GameObject: {fileID: 3266096313540649545}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.22, y: 0.22, z: 0.22}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_Children:
   - {fileID: 6532617170392066157}
   - {fileID: 9152648920697867007}
