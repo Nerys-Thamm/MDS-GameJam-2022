@@ -113,5 +113,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   CandyLifeTime: 0
-  MaxCandyLifeTime: 40
-  Multiplier: 1
+  MaxCandyLifeTime: 10
+  Multiplier: 0.1
