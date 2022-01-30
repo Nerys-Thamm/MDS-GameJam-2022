@@ -762,7 +762,7 @@ RectTransform:
   - {fileID: 888030754}
   - {fileID: 1130016007}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1438,13 +1438,13 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 100000
+  m_Intensity: 61549.05
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1477,9 +1477,9 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 2
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 0.5, y: 0.5}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 1
@@ -1495,13 +1495,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 765371594}
-  m_LocalRotation: {x: -0.118592925, y: -0.70412284, z: 0.6520737, w: -0.25484645}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalRotation: {x: -0.1794634, y: -0.5586846, z: 0.052397184, w: -0.808034}
+  m_LocalPosition: {x: -15.55, y: -0.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 101.84, y: -84.48801, z: 126.302}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 159.6, y: -109.4, z: 187.1}
 --- !u!114 &765371597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1522,13 +1522,13 @@ MonoBehaviour:
   m_PointlightHDType: 0
   m_SpotLightShape: 0
   m_AreaLightShape: 0
-  m_Intensity: 100000
+  m_Intensity: 61549.05
   m_EnableSpotReflector: 1
   m_LuxAtDistance: 1
   m_InnerSpotPercent: 0
   m_SpotIESCutoffPercent: 100
   m_LightDimmer: 1
-  m_VolumetricDimmer: 1
+  m_VolumetricDimmer: 0.68
   m_LightUnit: 2
   m_FadeDistance: 10000
   m_VolumetricFadeDistance: 10000
@@ -3213,7 +3213,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1528239094
 GameObject:
@@ -3425,6 +3425,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54f257fa691ecc9429b3f99a65553065, type: 3}
+--- !u!1 &1860393839 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1101344353547470992, guid: 54f257fa691ecc9429b3f99a65553065, type: 3}
+  m_PrefabInstance: {fileID: 1860393838}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1873982319
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3666,11 +3671,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: 0.01
+  far clip plane: 990.62
   field of view: 60
   orthographic: 1
-  orthographic size: 4.51
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3683,7 +3688,7 @@ Camera:
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
 --- !u!4 &1906774538
@@ -3693,15 +3698,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906774535}
-  m_LocalRotation: {x: 0.09543486, y: 0.4466474, z: -0.04798517, w: 0.8883106}
-  m_LocalPosition: {x: -7.87, y: 4.99, z: -9.82}
+  m_LocalRotation: {x: 0.2764315, y: 0.36515197, z: -0.11450168, w: 0.8815549}
+  m_LocalPosition: {x: -6.2, y: 7.85, z: -9.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 582173581}
   - {fileID: 906992060}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 12.264, y: 53.387, z: 0}
+  m_LocalEulerAnglesHint: {x: 34.82, y: 45, z: 0}
 --- !u!114 &1906774539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3761,7 +3766,7 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
-  clearColorMode: 0
+  clearColorMode: 1
   backgroundColorHDR: {r: 0.025, g: 0.07, b: 0.19, a: 0}
   clearDepth: 1
   volumeLayerMask:
@@ -3796,7 +3801,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   hasPersistentHistory: 0
-  exposureTarget: {fileID: 0}
+  exposureTarget: {fileID: 1860393839}
   m_RenderingPathCustomFrameSettings:
     bitDatas:
       data1: 72198262773251917
