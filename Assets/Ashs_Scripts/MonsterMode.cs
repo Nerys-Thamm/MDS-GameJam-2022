@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MonsterMode : MonoBehaviour
 {
@@ -21,17 +22,31 @@ public class MonsterMode : MonoBehaviour
     [SerializeField] Transform m_SpherePoint;
     [SerializeField] float m_SphereCastRadius;
     [SerializeField] LayerMask m_EatableLayerMask;
+
+    [SerializeField] float m_TimeLeft = 300.0f;
+
+    public int CandyCount = 10;
+
+    [Header("CoolDowns")]
     [SerializeField] float m_transformCooldown;
     [SerializeField] float m_DropCandyCooldown;
+    [SerializeField] float m_AttackCooldown;
+
     [SerializeField] float m_MaxDropCandyCooldown = 1.5f;
+    [SerializeField] float m_maxTrasnformCooldown = 2.5f;
+    [SerializeField] float m_MaxAttackCooldown = 0.5f;
 
     [SerializeField] Transform m_CandyDropPoint;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip m_DropCandy;
+
     //Input Actions
-    InputAction Input_SwitchMode;
+    public InputAction Input_SwitchMode;
     InputAction Input_DropCandy;
     InputAction Input_Attack;
-    float m_maxTrasnformCooldown = 10.0f;
+
+ 
 
     // Start is called before the first frame update
     void Start()
@@ -53,16 +68,19 @@ public class MonsterMode : MonoBehaviour
 
         //Get Internal Components
         m_PlayerMovement = GetComponent<PlayerMotor>();
- 
+        audioSource = GetComponent<AudioSource>();
         m_animator = GetComponentInChildren<Animator>();
+
     }
 
     void DropCandy(InputAction.CallbackContext context)
     {
-        if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f)
+        if (!m_IsInMonsterMode && m_DropCandyCooldown <= 0.0f && CandyCount > 0)
         {
+            audioSource.PlayOneShot(m_DropCandy);
             Instantiate(CandyPrefab, m_CandyDropPoint.position, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f),0.0f));
             m_DropCandyCooldown = m_MaxDropCandyCooldown;
+            CandyCount--;
         }
     }
 
@@ -104,29 +122,28 @@ public class MonsterMode : MonoBehaviour
     public void CalculateAttack()
     {
         Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-            Debug.Log(hitNPCs.Length);
-            foreach (Collider NPC in hitNPCs)
-            {
-                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.Death();
-            }
+        Debug.Log(hitNPCs.Length);
+        foreach (Collider NPC in hitNPCs)
+        {
+            TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
+            thisNPC.Death();
+        }
+
+
+
     }
+
+
     public void Attack(InputAction.CallbackContext context)
     {
-        if (m_IsInMonsterMode)
+        if (m_IsInMonsterMode && m_AttackCooldown <= 0)
         {
-           /* Collider[] hitNPCs = Physics.OverlapSphere(m_SpherePoint.position, m_SphereCastRadius, m_EatableLayerMask);
-            Debug.Log(hitNPCs.Length);
-            foreach (Collider NPC in hitNPCs)
-            {
-                TrickOrTreaterAI thisNPC = NPC.GetComponent<TrickOrTreaterAI>();
-                thisNPC.Death();
-            }*/
             m_animator.SetTrigger("Attack");
+            m_AttackCooldown = m_MaxAttackCooldown;
         }
     }
 
-    public void TriggerEndAnimation(InputAction.CallbackContext context)
+    public void TriggerEndAnimation()
     {
         m_PlayerMovement.ToggleMovementLock();
         m_animator.SetTrigger("TriggerEnd");
@@ -140,11 +157,22 @@ public class MonsterMode : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_TimeLeft > 0.0f)
+        {
+            m_TimeLeft -= Time.deltaTime;
+        }
+        else if(m_TimeLeft <= 0.0f)
+        {
+            TriggerEndAnimation();
+        }
         if (m_transformCooldown > 0.0f)
         {
             m_transformCooldown -= Time.deltaTime;
         }
-
+        if (m_AttackCooldown > 0.0f)
+        {
+            m_AttackCooldown -= Time.deltaTime;
+        }
         if (m_DropCandyCooldown > 0.0f)
         {
             m_DropCandyCooldown -= Time.deltaTime;

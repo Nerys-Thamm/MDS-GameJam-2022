@@ -149,7 +149,7 @@ Material:
     - _CoatMask: 0
     - _ColStr: 24.25
     - _ColThickness: 1.2
-    - _ColThreshhold: 2.39
+    - _ColThreshhold: 1.06
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
