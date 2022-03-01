@@ -5700,6 +5700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d0257d2a3710d148ab99e7b270fc4c7, type: 3}
+<<<<<<< HEAD
 --- !u!4 &525725380 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4620331275942647976, guid: 9d0257d2a3710d148ab99e7b270fc4c7, type: 3}
@@ -5720,6 +5721,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4620331275942647976, guid: 9d0257d2a3710d148ab99e7b270fc4c7, type: 3}
   m_PrefabInstance: {fileID: 642665203}
   m_PrefabAsset: {fileID: 0}
+=======
+>>>>>>> 81fddd5 (Nerys Stuff)
 --- !u!1001 &541245262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14954,6 +14957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d0257d2a3710d148ab99e7b270fc4c7, type: 3}
+<<<<<<< HEAD
 --- !u!4 &1324733464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2745034023053949171, guid: c53761d0d85323c4ab72a606de2d3cf9, type: 3}
@@ -14984,6 +14988,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4620331275942647976, guid: 9d0257d2a3710d148ab99e7b270fc4c7, type: 3}
   m_PrefabInstance: {fileID: 1906624756}
   m_PrefabAsset: {fileID: 0}
+=======
+>>>>>>> 81fddd5 (Nerys Stuff)
 --- !u!1001 &1347951328
 PrefabInstance:
   m_ObjectHideFlags: 0
