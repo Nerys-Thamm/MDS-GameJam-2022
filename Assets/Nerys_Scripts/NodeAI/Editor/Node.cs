@@ -21,6 +21,18 @@ namespace NodeAI
 
         public Action<Node> OnRemove;
 
+        public enum NodeType
+        {
+            State,
+            Condition,
+            Action,
+            Sequence,
+            Delay,
+            Entry
+        }
+
+        public NodeType type;
+
         public Node(
             Vector2 position, 
             float width, 
@@ -45,6 +57,27 @@ namespace NodeAI
             OnRemove = OnClickRemove;
         }
 
+        public Node(
+            Vector2 position, 
+            float width, 
+            float height, 
+            GUIStyle nodeStyle, 
+            GUIStyle selectedStyle, 
+            GUIStyle outputStyle,  
+            Action<LinkPoint> OnClickOutput
+            )
+        {
+            rect = new Rect(position.x, position.y, width, height);
+            style = nodeStyle;
+            input = null;
+            output = new LinkPoint(this, LinkType.Output, outputStyle, OnClickOutput);
+
+            defaultStyle = nodeStyle;
+            this.selectedStyle = selectedStyle;
+
+            OnRemove = null;
+        }
+
         public void Move(Vector2 delta)
         {
             rect.position += delta;
@@ -52,8 +85,10 @@ namespace NodeAI
 
         public void Draw()
         {
-            input.Draw();
-            output.Draw();
+            if(input != null)
+                input.Draw();
+            if(output != null)
+                output.Draw();
             GUI.Box(rect, title, style);
         }
 

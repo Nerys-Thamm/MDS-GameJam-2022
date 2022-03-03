@@ -2,20 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using Unity;
 
 namespace NodeAI
 {
     public class NodeAIEditor : EditorWindow
     {
+        //Node UI
         private List<Node> nodes;
         private List<Link> links;
 
-        private GUIStyle style;
+        private GUIStyle style, startNodeStyle, startNodeSelectedStyle;
         private GUIStyle inputStyle, outputStyle, selectedStyle;
 
         private LinkPoint selectedInput, selectedOutput;
 
         private Vector2 offset;
+
+        //Window UI
+
+        private bool creatingNewObj = false;
+        private string newObjName = "";
+
+        //Internal Data
+        private AIController controller;
 
         [MenuItem("Window/NodeAI")]
         private static void OpenWindow()
@@ -28,7 +38,15 @@ namespace NodeAI
         {
             style = new GUIStyle();
             style.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-            style.border = new RectOffset(12, 12, 12, 12);
+            style.border = new RectOffset(4, 4, 12, 12);
+
+            startNodeStyle = new GUIStyle();
+            startNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2.png") as Texture2D;
+            startNodeStyle.border = new RectOffset(4, 4, 12, 12);
+
+            startNodeSelectedStyle = new GUIStyle();
+            startNodeSelectedStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2 on.png") as Texture2D;
+            startNodeSelectedStyle.border = new RectOffset(12, 12, 12, 12);
 
             inputStyle = new GUIStyle();
             inputStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
@@ -47,17 +65,70 @@ namespace NodeAI
 
         private void OnGUI()
         {
-            DrawGrid(20, 0.2f, Color.gray);
-            DrawGrid(100, 0.4f, Color.gray);
-            DrawNodes();
-            DrawLinks();
-            DrawLinkLine(Event.current);
-            ProcessNodeEvents(Event.current);
-            ProcessEvents(Event.current);
+            if(controller != null)
+            {
+                DrawGrid(20, 0.2f, Color.gray);
+                DrawGrid(100, 0.4f, Color.gray);
+                DrawNodes();
+                DrawLinks();
+                DrawLinkLine(Event.current);
+                ProcessNodeEvents(Event.current);
+                ProcessEvents(Event.current);
+            }
+            DrawUI();
+            
+
+            
 
             if(GUI.changed) Repaint();
         }
 
+        private void DrawUI()
+        {
+            EditorGUILayout.BeginHorizontal();
+            if(creatingNewObj == false && GUILayout.Button("New"))
+            {
+                creatingNewObj = true;
+            }
+            if(creatingNewObj == true)
+            {
+                GUILayout.Label("Name");
+                newObjName = GUILayout.TextField(newObjName);
+                if(GUILayout.Button("Create") && newObjName != "")
+                {
+                    creatingNewObj = false;
+                    CreateNewAIController(newObjName);
+                    newObjName = "";
+                    
+                    nodes.Add(new Node(new Vector2(200, 200), 200, 200, startNodeStyle, startNodeSelectedStyle, outputStyle, OnClickOutput));
+                    
+                }
+                if(GUILayout.Button("Cancel"))
+                {
+                    creatingNewObj = false;
+                }
+            }
+            else
+            {
+                controller = EditorGUILayout.ObjectField(controller, typeof(AIController), true) as AIController;
+            }
+            
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void CreateNewAIController(string name)
+        {
+            controller = ScriptableObject.CreateInstance<AIController>();
+            
+            //AssetDatabase.CreateAsset(controller, "Assets/Resources/AI/" + name + ".asset");
+            ProjectWindowUtil.CreateAsset(controller, newObjName + "_AICtrl.asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
+        
+
+
+//NODE UI CODE
         private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
         {
             int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
