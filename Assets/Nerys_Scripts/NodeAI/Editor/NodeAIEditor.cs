@@ -15,6 +15,8 @@ namespace NodeAI
 
         private LinkPoint selectedInput, selectedOutput;
 
+        private Vector2 offset;
+
         [MenuItem("Window/NodeAI")]
         private static void OpenWindow()
         {
@@ -45,12 +47,73 @@ namespace NodeAI
 
         private void OnGUI()
         {
+            DrawGrid(20, 0.2f, Color.gray);
+            DrawGrid(100, 0.4f, Color.gray);
             DrawNodes();
             DrawLinks();
+            DrawLinkLine(Event.current);
             ProcessNodeEvents(Event.current);
             ProcessEvents(Event.current);
 
             if(GUI.changed) Repaint();
+        }
+
+        private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
+        {
+            int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
+            int heightDivs = Mathf.CeilToInt(position.height / gridSpacing);
+
+            Handles.BeginGUI();
+            Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridOpacity);
+
+            
+            Vector3 newOffset = new Vector3(offset.x % gridSpacing, offset.y % gridSpacing, 0);
+
+            for(int i = 0; i < widthDivs; i++)
+            {
+                Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, position.height, 0f) + newOffset);
+            }
+
+            for(int j = 0; j < heightDivs; j++)
+            {
+                Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(position.width, gridSpacing * j, 0f) + newOffset);
+            }
+
+            Handles.color = Color.white;
+            Handles.EndGUI();
+        }
+
+        private void DrawLinkLine(Event e)
+        {
+            if(selectedInput != null && selectedOutput == null)
+            {
+                Handles.DrawBezier(
+                    selectedInput.rect.center,
+                    e.mousePosition,
+                    selectedInput.rect.center + Vector2.left * 50f,
+                    e.mousePosition - Vector2.left * 50f,
+                    Color.white,
+                    null,
+                    2f
+                );
+
+                GUI.changed = true;
+            }
+
+            if(selectedInput == null && selectedOutput != null)
+            {
+                Handles.DrawBezier(
+                    e.mousePosition,
+                    selectedOutput.rect.center,
+                    e.mousePosition + Vector2.left * 50f,
+                    selectedOutput.rect.center - Vector2.left * 50f,
+                    Color.white,
+                    null,
+                    2f
+                );
+
+                GUI.changed = true;
+            }
         }
 
         private void DrawNodes()
@@ -77,6 +140,7 @@ namespace NodeAI
 
         private void ProcessEvents(Event e)
         {
+
             switch(e.type)
             {
                 case EventType.MouseDown:
@@ -84,8 +148,34 @@ namespace NodeAI
                     {
                         ProcessContextMenu(e.mousePosition);
                     }
+                    if(e.button == 0)
+                    {
+                        selectedInput = null;
+                        selectedOutput = null;
+                    }
+                    break;
+                case EventType.MouseDrag:
+                    if(e.button == 2)
+                    {
+                        OnMoveCanvas(e.delta);
+                    }
                     break;
             }
+        }
+
+        private void OnMoveCanvas(Vector2 delta)
+        {
+            offset += delta;
+
+            if(nodes != null)
+            {
+                foreach(Node node in nodes)
+                {
+                    node.Move(delta);
+                }
+            }
+
+            GUI.changed = true;
         }
 
         private void ProcessNodeEvents(Event e)
