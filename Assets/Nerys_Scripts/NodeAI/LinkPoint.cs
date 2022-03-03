@@ -2,13 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-namespace NodeAI;
+//namespace NodeAI;
 
     public enum LinkType
     {
         Input,
         Output
+    }
+
+    public enum LinkDataType
+    {
+        Float,
+        Int,
+        Bool,
+        Sequence
     }
 
     public class LinkPoint 
@@ -32,9 +41,9 @@ namespace NodeAI;
             rect = new Rect(0, 0, 10, 20);
         }
 
-        public void Draw()
+        public void Draw(int line)
         {
-            rect.y = node.rect.y + (node.rect.height * 0.5f) - rect.height * 0.5f;
+            rect.y = node.rect.y + 5 + (EditorGUIUtility.singleLineHeight * line);
 
             if(type == LinkType.Input)
             {

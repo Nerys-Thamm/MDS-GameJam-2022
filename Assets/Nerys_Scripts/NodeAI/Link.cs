@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-namespace NodeAI;
+//namespace NodeAI;
 
     public class Link 
     {

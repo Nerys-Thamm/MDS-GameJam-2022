@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace NodeAI;
+//namespace NodeAI;
 
 public class NodeAIEditor : EditorWindow
 {
     //Node UI
-    private List<Node> nodes;
-    private List<Link> links;
+
 
     private GUIStyle style, startNodeStyle, startNodeSelectedStyle;
     private GUIStyle inputStyle, outputStyle, selectedStyle;
@@ -38,29 +37,35 @@ public class NodeAIEditor : EditorWindow
     {
         style = new GUIStyle();
         style.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
-        style.border = new RectOffset(4, 4, 12, 12);
+        style.border = new RectOffset(12, 12, 12, 12);
+        style.alignment = TextAnchor.MiddleCenter;
 
         startNodeStyle = new GUIStyle();
         startNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2.png") as Texture2D;
-        startNodeStyle.border = new RectOffset(4, 4, 12, 12);
+        startNodeStyle.border = new RectOffset(12, 12, 12, 12);
+        startNodeStyle.alignment = TextAnchor.MiddleCenter;
 
         startNodeSelectedStyle = new GUIStyle();
         startNodeSelectedStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node2 on.png") as Texture2D;
         startNodeSelectedStyle.border = new RectOffset(12, 12, 12, 12);
+        startNodeSelectedStyle.alignment = TextAnchor.MiddleCenter;
 
         inputStyle = new GUIStyle();
         inputStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left.png") as Texture2D;
         inputStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn left on.png") as Texture2D;
         inputStyle.border = new RectOffset(4, 4, 12, 12);
+        
 
         outputStyle = new GUIStyle();
         outputStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right.png") as Texture2D;
         outputStyle.active.background = EditorGUIUtility.Load("builtin skins/darkskin/images/btn right on.png") as Texture2D;
         outputStyle.border = new RectOffset(4, 4, 12, 12);
 
+
         selectedStyle = new GUIStyle();
         selectedStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         selectedStyle.border = new RectOffset(12, 12, 12, 12);
+        selectedStyle.alignment = TextAnchor.MiddleCenter;
     }
 
     private void OnGUI()
@@ -76,7 +81,22 @@ public class NodeAIEditor : EditorWindow
             ProcessEvents(Event.current);
         }
         DrawUI();
-        
+        if(controller != null)
+        {
+            if(controller.nodes == null)
+            {
+                controller.nodes = new List<Node>();
+            }
+            if(controller.links == null)
+            {
+                controller.links = new List<Link>();
+            }
+            if(controller.nodes.Count == 0)
+            {
+                Node node = new Node(new Vector2(200, 200), 200, 50, startNodeStyle, startNodeSelectedStyle, outputStyle, OnClickOutput);
+                controller.nodes.Add(node);
+            }
+        }
 
         
 
@@ -100,7 +120,7 @@ public class NodeAIEditor : EditorWindow
                 CreateNewAIController(newObjName);
                 newObjName = "";
                 
-                nodes.Add(new Node(new Vector2(200, 200), 200, 200, startNodeStyle, startNodeSelectedStyle, outputStyle, OnClickOutput));
+                
                 
             }
             if(GUILayout.Button("Cancel"))
@@ -114,7 +134,11 @@ public class NodeAIEditor : EditorWindow
         }
         
         EditorGUILayout.EndHorizontal();
+
+        
     }
+    
+    
 
     private void CreateNewAIController(string name)
     {
@@ -189,9 +213,9 @@ public class NodeAIEditor : EditorWindow
 
     private void DrawNodes()
     {
-        if(nodes != null)
+        if(controller.nodes != null)
         {
-            foreach(Node node in nodes)
+            foreach(Node node in controller.nodes)
             {
                 node.Draw();
             }
@@ -200,9 +224,9 @@ public class NodeAIEditor : EditorWindow
 
     private void DrawLinks()
     {
-        if(links != null)
+        if(controller.links != null)
         {
-            foreach(Link link in links)
+            foreach(Link link in controller.links)
             {
                 link.Draw();
             }
@@ -238,9 +262,9 @@ public class NodeAIEditor : EditorWindow
     {
         offset += delta;
 
-        if(nodes != null)
+        if(controller.nodes != null)
         {
-            foreach(Node node in nodes)
+            foreach(Node node in controller.nodes)
             {
                 node.Move(delta);
             }
@@ -251,11 +275,11 @@ public class NodeAIEditor : EditorWindow
 
     private void ProcessNodeEvents(Event e)
     {
-        if(nodes != null)
+        if(controller.nodes != null)
         {
-            for(int i = nodes.Count - 1; i >= 0; i--)
+            for(int i = controller.nodes.Count - 1; i >= 0; i--)
             {
-                bool guiChanged = nodes[i].ProcessEvents(e);
+                bool guiChanged = controller.nodes[i].ProcessEvents(e);
 
                 if(guiChanged)
                 {
@@ -268,10 +292,33 @@ public class NodeAIEditor : EditorWindow
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add node"), false, () =>
+        genericMenu.AddItem(new GUIContent("Add Node/State"), false, () =>
         {
-            if(nodes == null) nodes = new List<Node>();
-            nodes.Add(new Node(mousePosition, 200, 50, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode));
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State));
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Condition"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Condition));
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Action"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Action));
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Delay"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Delay));
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Parameter"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Parameter));
+            controller.nodes[controller.nodes.Count - 1].parameter = new AIController.Parameter();
+            if(controller.parameters == null) controller.parameters = new List<AIController.Parameter>();
+            controller.parameters.Add(controller.nodes[controller.nodes.Count - 1].parameter);
         });
         genericMenu.ShowAsContext();
     }
@@ -282,7 +329,7 @@ public class NodeAIEditor : EditorWindow
 
         if(selectedOutput != null && selectedInput != selectedOutput)
         {
-            if(links == null) links = new List<Link>();
+            if(controller.links == null) controller.links = new List<Link>();
             MakeLink();
             selectedOutput = null;
             selectedInput = null;
@@ -296,7 +343,7 @@ public class NodeAIEditor : EditorWindow
 
         if(selectedInput != null && selectedInput != selectedOutput)
         {
-            if(links == null) links = new List<Link>();
+            if(controller.links == null) controller.links = new List<Link>();
             MakeLink();
             selectedInput = null;
             selectedOutput = null;
@@ -308,42 +355,46 @@ public class NodeAIEditor : EditorWindow
     {
         if(selectedOutput != null)
         {
-            if(links == null) links = new List<Link>();
-            links.Add(new Link(selectedOutput, selectedInput, RemoveLink));
+            if(controller.links == null) controller.links = new List<Link>();
+            controller.links.Add(new Link(selectedOutput, selectedInput, RemoveLink));
             selectedOutput = null;
         }
     }
 
     private void RemoveLink(Link link)
     {
-        if(links.Contains(link))
+        if(controller.links.Contains(link))
         {
-            links.Remove(link);
+            controller.links.Remove(link);
         }
     }
 
     private void OnRemoveNode(Node node)
     {
-        if(links != null)
+        if(controller.links != null)
         {
             List<Link> linksToRemove = new List<Link>();
-            for(int i = links.Count - 1; i >= 0; i--)
+            for(int i = controller.links.Count - 1; i >= 0; i--)
             {
-                if(links[i].input == node.input || links[i].output == node.output)
+                if(controller.links[i].input == node.seqInput || controller.links[i].output == node.seqOutput)
                 {
-                    linksToRemove.Add(links[i]);
+                    linksToRemove.Add(controller.links[i]);
                 }
                 
             }
             foreach(Link link in linksToRemove)
             {
-                links.Remove(link);
+                controller.links.Remove(link);
             }
             linksToRemove = null;
         }
-        if(nodes.Contains(node))
+        if(controller.nodes.Contains(node))
         {
-            nodes.Remove(node);
+            if(node.type == Node.NodeType.Parameter)
+            {
+                controller.parameters.Remove(node.parameter);
+            }
+            controller.nodes.Remove(node);
         }
     }
     
