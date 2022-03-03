@@ -6,9 +6,12 @@ using UnityEditor;
 
 //namespace NodeAI;
 
+    [System.Serializable]
     public class Link 
     {
+        
         public LinkPoint input;
+        
         public LinkPoint output;
         public Action<Link> OnClick;
 

@@ -6,9 +6,10 @@ using UnityEditor;
 
 
 //namespace NodeAI;
-
+[System.Serializable]
 public class Node 
 {
+    public string ID;
     public Rect rect;
     public string title;
     public bool isDragging;
@@ -16,16 +17,17 @@ public class Node
     public GUIStyle style;
     public GUIStyle defaultStyle;
     public GUIStyle selectedStyle;
-
+    
     public LinkPoint seqInput;
+    
     public LinkPoint seqOutput;
-
+    
     public LinkPoint miscOutput;
-
+    
     public LinkPoint conditionTrueOutput, conditionFalseOutput;
-
+    
     public Action<Node> OnRemove;
-
+    
     public List<NodeField> fields;
 
 
@@ -39,7 +41,7 @@ public class Node
         Parameter,
         Entry
     }
-
+    
     public class NodeField
     {
         public FieldType type;
@@ -51,17 +53,18 @@ public class Node
 
         public bool hasInput;
         public bool hasOutput;
-
+        
         public LinkPoint input;
+        
         public LinkPoint output;
-        public NodeField(Node parent, string name, string value)
+        public NodeField(string name, string value)
         {
             this.name = name;
             this.svalue = value;
             this.type = FieldType.String;
             
         }
-        public NodeField(Node parent, string name, int value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, int value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.ivalue = value;
@@ -70,15 +73,15 @@ public class Node
             this.hasOutput = hasOutput;
             if(hasInput)
             {
-                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+                this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
             }
             if(hasOutput)
             {
-                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+                this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
             }
         }
         
-        public NodeField(Node parent, string name, float value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, float value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.fvalue = value;
@@ -87,14 +90,14 @@ public class Node
             this.hasOutput = hasOutput;
             if(hasInput)
             {
-                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Float, inputStyle, OnClickInput);
+                this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Float, inputStyle, OnClickInput);
             }
             if(hasOutput)
             {
-                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Float, outputStyle, OnClickOutput);
+                this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Float, outputStyle, OnClickOutput);
             }
         }
-        public NodeField(Node parent, string name, bool value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, bool value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.bvalue = value;
@@ -103,11 +106,11 @@ public class Node
             this.hasOutput = hasOutput;
             if(hasInput)
             {
-                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Bool, inputStyle, OnClickInput);
+                this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Bool, inputStyle, OnClickInput);
             }
             if(hasOutput)
             {
-                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
+                this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
             }
         }
 
@@ -142,11 +145,11 @@ public class Node
 
             if(input != null)
             {
-                input.Draw(line+1);
+                input.Draw(line+1, rect);
             }
             if(output != null)
             {
-                output.Draw(line+1);
+                output.Draw(line+1, rect);
             }
         }
     }
@@ -170,6 +173,16 @@ public class Node
     }
     public LogicType logicType;
 
+    //State Node:
+    public enum StateType
+    {
+        Idle,
+        Seek,
+        Flee,
+        Wander
+    }
+
+    public StateType stateType;
 
 
     public Node(
@@ -191,8 +204,8 @@ public class Node
         style = nodeStyle;
         if(hasSequenceLinks)
         {
-            seqInput = new LinkPoint(this, LinkType.Input, LinkDataType.Sequence, inputStyle, OnClickInput);
-            seqOutput = new LinkPoint(this, LinkType.Output,  LinkDataType.Sequence, outputStyle, OnClickOutput);
+            seqInput = new LinkPoint(ID, LinkType.Input, LinkDataType.Sequence, inputStyle, OnClickInput);
+            seqOutput = new LinkPoint(ID, LinkType.Output,  LinkDataType.Sequence, outputStyle, OnClickOutput);
         }
 
         switch(type)
@@ -204,12 +217,12 @@ public class Node
             case NodeType.Condition:
                 this.type = NodeType.Condition;
                 this.title = "Condition";
-                conditionTrueOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
-                conditionFalseOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
+                conditionTrueOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
+                conditionFalseOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
                 seqOutput = null;
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this, "Input", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Input", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
                 };
                 break;
             case NodeType.Action:
@@ -221,17 +234,17 @@ public class Node
                 this.title = "Logic";
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this, "Input A", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle),
-                    new NodeField(this, "Input B", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Input A", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle),
+                    new NodeField(this.ID, "Input B", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
                 };
-                this.miscOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
+                this.miscOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
                 break;
             case NodeType.Delay:
                 this.type = NodeType.Delay;
                 this.title = "Delay";
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
                 };
                 break;
             case NodeType.Parameter:
@@ -243,8 +256,9 @@ public class Node
                     this.parameter.fvalue = 0;
                 }
                 this.type = NodeType.Parameter;
-                this.miscOutput = new LinkPoint(this, LinkType.Output, (LinkDataType)this.parameter.type, outputStyle, OnClickOutput);
+                this.miscOutput = new LinkPoint(this.ID, LinkType.Output, (LinkDataType)this.parameter.type, outputStyle, OnClickOutput);
                 this.title = "Parameter";
+                this.parameter.name = "NewParam";
                 break;
             case NodeType.Entry:
                 this.type = NodeType.Entry;
@@ -272,7 +286,7 @@ public class Node
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
         seqInput = null;
-        seqOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
+        seqOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
 
         defaultStyle = nodeStyle;
         this.selectedStyle = selectedStyle;
@@ -289,9 +303,9 @@ public class Node
     public void Draw()
     {
         if(seqInput != null)
-            seqInput.Draw(0);
+            seqInput.Draw(0, rect);
         if(seqOutput != null)
-            seqOutput.Draw(0);
+            seqOutput.Draw(0, rect);
         GUI.Box(rect, "", style);
         EditorGUI.LabelField(new Rect(rect.x + 15, rect.y + 5, 80, 20), title);
         switch(type)
@@ -319,10 +333,10 @@ public class Node
                         parameter.bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20), parameter.bvalue);
                         break;
                 }
-                miscOutput.Draw(2);
+                miscOutput.Draw(2, rect);
                 break;
             case NodeType.Logic:
-                miscOutput.Draw(fields.Count);
+                miscOutput.Draw(fields.Count, rect);
                 switch(logicType)
                 {
                     case LogicType.AND:
@@ -341,9 +355,9 @@ public class Node
                 break;
             case NodeType.Condition:
                 title = "IF | Condition";
-                conditionTrueOutput.Draw(2);
+                conditionTrueOutput.Draw(2, rect);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 45), (rect.y - 5) + ( EditorGUIUtility.singleLineHeight * 3), 80, 20), "True:");
-                conditionFalseOutput.Draw(3);
+                conditionFalseOutput.Draw(3, rect);
                 EditorGUI.LabelField(new Rect(rect.x + (rect.width - 45), (rect.y - 5) + ( EditorGUIUtility.singleLineHeight * 4), 80, 20), "False:");
                 break;
         }
@@ -412,6 +426,9 @@ public class Node
             OnRemove(this);
         }
     }
+
+    
+
     
 }
 

@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class NodeAI_Agent : MonoBehaviour
 {
-    public enum State
-    {
-        Idle,
-        Seek,
-        Flee,
-        Wander
-    }
+    public Node.StateType currentState;
+    public Node currentStateEntryNode;
     public AIController controller;
+    
 
     public Node currentSequenceNode;
 
@@ -25,6 +21,10 @@ public class NodeAI_Agent : MonoBehaviour
                 break;
             case Node.NodeType.Condition:
                 HandleConditionNode(node);
+                break;
+            case Node.NodeType.State:
+                currentState = node.stateType;
+                currentStateEntryNode = node;
                 break;
             
         }

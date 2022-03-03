@@ -25,6 +25,10 @@ public class NodeAIEditor : EditorWindow
 
     //Internal Data
     private AIController controller;
+    private SerializedObject serializedController;
+
+    
+    private List<AIController.Parameter> parameters;
 
     [MenuItem("Window/NodeAI")]
     private static void OpenWindow()
@@ -66,6 +70,44 @@ public class NodeAIEditor : EditorWindow
         selectedStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1 on.png") as Texture2D;
         selectedStyle.border = new RectOffset(12, 12, 12, 12);
         selectedStyle.alignment = TextAnchor.MiddleCenter;
+
+        if(controller != null)
+        {
+            foreach(Node node in controller.nodes)
+            {
+                if(node.miscOutput != null)
+                {
+                    node.miscOutput.node = node;
+                }
+                if(node.seqInput != null)
+                {
+                    node.seqInput.node = node;
+                }
+                if(node.seqOutput != null)
+                {
+                    node.seqOutput.node = node;
+                }
+                if(node.conditionTrueOutput != null)
+                {
+                    node.conditionTrueOutput.node = node;
+                }
+                if(node.conditionFalseOutput != null)
+                {
+                    node.conditionFalseOutput.node = node;
+                }
+                foreach(Node.NodeField field in node.fields)
+                {
+                    if(field.output != null)
+                    {
+                        field.output.node = node;
+                    }
+                    if(field.input != null)
+                    {
+                        field.input.node = node;
+                    }
+                }
+            }
+        }
     }
 
     private void OnGUI()
@@ -74,6 +116,8 @@ public class NodeAIEditor : EditorWindow
         {
             DrawGrid(20, 0.2f, Color.gray);
             DrawGrid(100, 0.4f, Color.gray);
+            controller.ReconnectNodes();
+            controller.ReconnectLinks(OnClickInput, OnClickOutput);
             DrawNodes();
             DrawLinks();
             DrawLinkLine(Event.current);
@@ -83,6 +127,11 @@ public class NodeAIEditor : EditorWindow
         DrawUI();
         if(controller != null)
         {
+            if(serializedController == null)
+            {
+                serializedController = new SerializedObject(controller);
+                //parameters = serializedController.FindProperty("parameters").;
+            }
             if(controller.nodes == null)
             {
                 controller.nodes = new List<Node>();
@@ -95,6 +144,40 @@ public class NodeAIEditor : EditorWindow
             {
                 Node node = new Node(new Vector2(200, 200), 200, 50, startNodeStyle, startNodeSelectedStyle, outputStyle, OnClickOutput);
                 controller.nodes.Add(node);
+            }
+            foreach(Node node in controller.nodes)
+            {
+                if(node.miscOutput != null)
+                {
+                    node.miscOutput.node = node;
+                }
+                if(node.seqInput != null)
+                {
+                    node.seqInput.node = node;
+                }
+                if(node.seqOutput != null)
+                {
+                    node.seqOutput.node = node;
+                }
+                if(node.conditionTrueOutput != null)
+                {
+                    node.conditionTrueOutput.node = node;
+                }
+                if(node.conditionFalseOutput != null)
+                {
+                    node.conditionFalseOutput.node = node;
+                }
+                foreach(Node.NodeField field in node.fields)
+                {
+                    if(field.output != null)
+                    {
+                        field.output.node = node;
+                    }
+                    if(field.input != null)
+                    {
+                        field.input.node = node;
+                    }
+                }
             }
         }
 
@@ -131,6 +214,12 @@ public class NodeAIEditor : EditorWindow
         else
         {
             controller = EditorGUILayout.ObjectField(controller, typeof(AIController), true) as AIController;
+            if(GUILayout.Button("Save") && controller != null)
+            {
+                EditorUtility.SetDirty(controller);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
         }
         
         EditorGUILayout.EndHorizontal();
@@ -146,6 +235,8 @@ public class NodeAIEditor : EditorWindow
         
         //AssetDatabase.CreateAsset(controller, "Assets/Resources/AI/" + name + ".asset");
         ProjectWindowUtil.CreateAsset(controller, newObjName + "_AICtrl.asset");
+        AssetDatabase.Refresh();
+        EditorUtility.SetDirty(controller);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
     }
@@ -253,6 +344,7 @@ public class NodeAIEditor : EditorWindow
                 if(e.button == 2)
                 {
                     OnMoveCanvas(e.delta);
+                    EditorUtility.SetDirty(controller);
                 }
                 break;
         }
@@ -289,61 +381,126 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    private string GenerateRandomString(int length)
+    {
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        string result = "";
+        for(int i = 0; i < length; i++)
+        {
+            result += chars[Random.Range(0, chars.Length)];
+        }
+        return result;
+    }
+
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
-        genericMenu.AddItem(new GUIContent("Add Node/State"), false, () =>
+        genericMenu.AddItem(new GUIContent("Add Node/State/IDLE"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State);
+            newNode.stateType = Node.StateType.Idle;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/State/SEEK"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State);
+            
+            newNode.stateType = Node.StateType.Seek;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/State/FLEE"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State);
+            
+            newNode.stateType = Node.StateType.Flee;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/State/WANDER"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.State);
+            
+            newNode.stateType = Node.StateType.Wander;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Condition"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Condition));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Condition);
+            
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Action"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Action));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Action);
+            
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Delay"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Delay));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Delay);
+            
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Parameter"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Parameter, false));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Parameter, false);
+            
             controller.nodes[controller.nodes.Count - 1].parameter = new AIController.Parameter();
             if(controller.parameters == null) controller.parameters = new List<AIController.Parameter>();
             controller.parameters.Add(controller.nodes[controller.nodes.Count - 1].parameter);
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/AND"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false);
+            
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.AND;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/OR"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false);
+            
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.OR;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/NOT"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false);
+            
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.NOT;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/XOR"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false);
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.XOR;
+            newNode.ID = GenerateRandomString(20);
+            controller.AddNode(newNode);
         });
+
         
         genericMenu.ShowAsContext();
     }
@@ -429,6 +586,10 @@ public class NodeAIEditor : EditorWindow
                 controller.parameters.Remove(node.parameter);
             }
             controller.nodes.Remove(node);
+        }
+        if(controller.nodeDictionary.ContainsKey(node.ID))
+        {
+            controller.nodeDictionary.Remove(node.ID);
         }
     }
     
