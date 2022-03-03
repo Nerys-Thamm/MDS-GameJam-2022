@@ -20,14 +20,19 @@ public class Node
     public LinkPoint seqInput;
     public LinkPoint seqOutput;
 
+    public LinkPoint miscOutput;
+
     public Action<Node> OnRemove;
+
+    public List<NodeField> fields;
+
 
     public enum NodeType
     {
         State,
         Condition,
         Action,
-        Sequence,
+        Logic,
         Delay,
         Parameter,
         Entry
@@ -44,37 +49,64 @@ public class Node
 
         public bool hasInput;
         public bool hasOutput;
-        public NodeField(string name, string value, bool hasInput, bool hasOutput)
+
+        public LinkPoint input;
+        public LinkPoint output;
+        public NodeField(Node parent, string name, string value)
         {
             this.name = name;
             this.svalue = value;
-            this.hasInput = hasInput;
-            this.hasOutput = hasOutput;
             this.type = FieldType.String;
+            
         }
-        public NodeField(string name, int value, bool hasInput, bool hasOutput)
+        public NodeField(Node parent, string name, int value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.ivalue = value;
+            this.type = FieldType.Int;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
-            this.type = FieldType.Int;
+            if(hasInput)
+            {
+                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+            }
+            if(hasOutput)
+            {
+                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+            }
         }
-        public NodeField(string name, float value, bool hasInput, bool hasOutput)
+        
+        public NodeField(Node parent, string name, float value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.fvalue = value;
+            this.type = FieldType.Int;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
-            this.type = FieldType.Float;
+            if(hasInput)
+            {
+                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+            }
+            if(hasOutput)
+            {
+                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+            }
         }
-        public NodeField(string name, bool value, bool hasInput, bool hasOutput)
+        public NodeField(Node parent, string name, bool value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.bvalue = value;
+            this.type = FieldType.Int;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
-            this.type = FieldType.Bool;
+            if(hasInput)
+            {
+                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+            }
+            if(hasOutput)
+            {
+                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+            }
         }
 
         public enum FieldType
@@ -87,23 +119,32 @@ public class Node
 
         public void Draw(int line, Rect rect)
         {
-            EditorGUI.LabelField(new Rect(rect.x + 5 , rect.y + 5 + ( EditorGUIUtility.singleLineHeight * (1+line)), 80, 20), name + ":");
+            EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), 80, 20), name + ":");
                 
             if(type == FieldType.String)
             {
-                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * (1+line)), rect.width - 90, 20), svalue);
+                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), rect.width - 90, 20), svalue);
             }
             else if(type == FieldType.Int)
             {
-                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * (1+line)),rect.width - 90, 20), ivalue);
+                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), ivalue);
             }
             else if(type == FieldType.Float)
             {
-                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * (1+line)),rect.width - 90, 20), fvalue);
+                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), fvalue);
             }
             else if(type == FieldType.Bool)
             {
-                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * (1+line)),rect.width - 90, 20), bvalue);
+                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), bvalue);
+            }
+
+            if(input != null)
+            {
+                input.Draw(line+1);
+            }
+            if(output != null)
+            {
+                output.Draw(line+1);
             }
         }
     }
@@ -116,6 +157,8 @@ public class Node
 
     //Parameter Node:
     public AIController.Parameter parameter;
+
+
 
     public Node(
         Vector2 position, 
@@ -136,8 +179,52 @@ public class Node
         style = nodeStyle;
         if(hasSequenceLinks)
         {
-            seqInput = new LinkPoint(this, LinkType.Input, inputStyle, OnClickInput);
-            seqOutput = new LinkPoint(this, LinkType.Output, outputStyle, OnClickOutput);
+            seqInput = new LinkPoint(this, LinkType.Input, LinkDataType.Sequence, inputStyle, OnClickInput);
+            seqOutput = new LinkPoint(this, LinkType.Output,  LinkDataType.Sequence, outputStyle, OnClickOutput);
+        }
+
+        switch(type)
+        {
+            case NodeType.State:
+                this.type = NodeType.State;
+                this.title = "State";
+                break;
+            case NodeType.Condition:
+                this.type = NodeType.Condition;
+                this.title = "Condition";
+                break;
+            case NodeType.Action:
+                this.type = NodeType.Action;
+                this.title = "Action";
+                break;
+            case NodeType.Logic:
+                this.type = NodeType.Logic;
+                this.title = "Logic";
+                break;
+            case NodeType.Delay:
+                this.type = NodeType.Delay;
+                this.title = "Delay";
+                this.fields = new List<NodeField>()
+                {
+                    new NodeField(this, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                };
+                break;
+            case NodeType.Parameter:
+                if(this.parameter == null)
+                {
+                    this.parameter = new AIController.Parameter();
+                    this.parameter.name = "Parameter";
+                    this.parameter.type = AIController.Parameter.ParameterType.Float;
+                    this.parameter.fvalue = 0;
+                }
+                this.type = NodeType.Parameter;
+                this.miscOutput = new LinkPoint(this, LinkType.Output, (LinkDataType)this.parameter.type, outputStyle, OnClickOutput);
+                this.title = "Parameter";
+                break;
+            case NodeType.Entry:
+                this.type = NodeType.Entry;
+                this.title = "Entry";
+                break;
         }
 
         defaultStyle = nodeStyle;
@@ -160,7 +247,7 @@ public class Node
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
         seqInput = null;
-        seqOutput = new LinkPoint(this, LinkType.Output, outputStyle, OnClickOutput);
+        seqOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
 
         defaultStyle = nodeStyle;
         this.selectedStyle = selectedStyle;
@@ -180,40 +267,44 @@ public class Node
             seqInput.Draw(0);
         if(seqOutput != null)
             seqOutput.Draw(0);
-        GUI.Box(rect, title, style);
+        GUI.Box(rect, "", style);
+        EditorGUI.LabelField(new Rect(rect.x + 15, rect.y + 5, 80, 20), title);
         switch(type)
         {
             case NodeType.State:
                 title = EditorGUI.TextField(new Rect(rect.x + rect.width - 60, rect.y + 5, 60, 20), title);
                 break;
             case NodeType.Parameter:
-                if(parameter == null)
-                {
-                    parameter = new AIController.Parameter();
-                    parameter.name = "Parameter";
-                    parameter.type = AIController.Parameter.ParameterType.Float;
-                    parameter.fvalue = 0;
-                }
-                EditorGUI.LabelField(new Rect(rect.x + 5, rect.y + 5, 80, 20), "Parameter");
-                EditorGUI.LabelField(new Rect(rect.x + 5 , rect.y + 5 + EditorGUIUtility.singleLineHeight, 80, 20), "Type:");
-                parameter.type = (AIController.Parameter.ParameterType)EditorGUI.EnumPopup(new Rect(rect.x + 85, rect.y + 5 + EditorGUIUtility.singleLineHeight, rect.width - 90, 20), parameter.type);
-                EditorGUI.LabelField(new Rect(rect.x + 5, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), 80, 20), "Name:");
-                parameter.name = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), rect.width - 90, 20), parameter.name);
-                EditorGUI.LabelField(new Rect(rect.x + 5, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), 80, 20), "Value:");
+                
+                EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + EditorGUIUtility.singleLineHeight, 80, 20), "Type:");
+                parameter.type = (AIController.Parameter.ParameterType)EditorGUI.EnumPopup(new Rect(rect.x + 85, rect.y + 5 + EditorGUIUtility.singleLineHeight, rect.width - 100, 20), parameter.type);
+                miscOutput.dataType = (LinkDataType)parameter.type;
+                EditorGUI.LabelField(new Rect(rect.x + 15, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), 80, 20), "Name:");
+                parameter.name = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), rect.width - 100, 20), parameter.name);
+                EditorGUI.LabelField(new Rect(rect.x + 15, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), 80, 20), "Value:");
                 switch(parameter.type)
                 {
                     case AIController.Parameter.ParameterType.Float:
-                        parameter.fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 90, 20), parameter.fvalue);
+                        parameter.fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20), parameter.fvalue);
                         break;
                     case AIController.Parameter.ParameterType.Int:
-                        parameter.ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 90, 20), parameter.ivalue);
+                        parameter.ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20), parameter.ivalue);
                         break;
                     case AIController.Parameter.ParameterType.Bool:
-                        parameter.bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 90, 20), parameter.bvalue);
+                        parameter.bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20), parameter.bvalue);
                         break;
                 }
+                miscOutput.Draw(2);
                 break;
         }
+        if(fields != null)
+        {
+            for(int i = 0; i < fields.Count; i++)
+            {
+                fields[i].Draw(i, rect);
+            }
+        }
+        
     }
 
     public bool ProcessEvents(Event e)

@@ -315,7 +315,7 @@ public class NodeAIEditor : EditorWindow
         genericMenu.AddItem(new GUIContent("Add Node/Parameter"), false, () =>
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
-            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Parameter));
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Parameter, false));
             controller.nodes[controller.nodes.Count - 1].parameter = new AIController.Parameter();
             if(controller.parameters == null) controller.parameters = new List<AIController.Parameter>();
             controller.parameters.Add(controller.nodes[controller.nodes.Count - 1].parameter);
@@ -327,7 +327,7 @@ public class NodeAIEditor : EditorWindow
     {
         selectedInput = linkPoint;
 
-        if(selectedOutput != null && selectedInput != selectedOutput)
+        if(selectedOutput != null && selectedInput != selectedOutput && selectedInput.dataType == selectedOutput.dataType)
         {
             if(controller.links == null) controller.links = new List<Link>();
             MakeLink();
@@ -341,7 +341,7 @@ public class NodeAIEditor : EditorWindow
     {
         selectedOutput = linkPoint;
 
-        if(selectedInput != null && selectedInput != selectedOutput)
+        if(selectedInput != null && selectedInput != selectedOutput && selectedInput.dataType == selectedOutput.dataType)
         {
             if(controller.links == null) controller.links = new List<Link>();
             MakeLink();

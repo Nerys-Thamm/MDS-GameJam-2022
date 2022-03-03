@@ -25,6 +25,7 @@ using UnityEditor;
         public Rect rect;
 
         public LinkType type;
+        public LinkDataType dataType;
 
         public Node node;
 
@@ -32,7 +33,7 @@ using UnityEditor;
 
         public Action<LinkPoint> OnClick;
 
-        public LinkPoint(Node node, LinkType type, GUIStyle style, Action<LinkPoint> OnClick)
+        public LinkPoint(Node node, LinkType type, LinkDataType dataType, GUIStyle style, Action<LinkPoint> OnClick)
         {
             this.node = node;
             this.type = type;
@@ -43,7 +44,7 @@ using UnityEditor;
 
         public void Draw(int line)
         {
-            rect.y = node.rect.y + 5 + (EditorGUIUtility.singleLineHeight * line);
+            rect.y = node.rect.y + 5 + ((EditorGUIUtility.singleLineHeight + 5) * line);
 
             if(type == LinkType.Input)
             {
