@@ -18,6 +18,10 @@ public class MovementPathEditor : Editor
     private void OnEnable()
     {
         path = (MovementPath)target;
+        if (path.m_Path == null)
+        {
+            path.m_Path = new List<MovementPath.PathNode>();
+        }
         nodes = serializedObject.FindProperty("m_Path");
         list = new ReorderableList(serializedObject, nodes, true, true, true, true);
         list.drawElementCallback += DrawElement;
@@ -97,7 +101,7 @@ public class MovementPathEditor : Editor
                     path.m_Path[i].Position = (hit.point + Vector3.up);
                 else if(Physics.Raycast(path.m_Path[i].Position, Vector3.up, out hit))
                     path.m_Path[i].Position = (hit.point + Vector3.up);
-                if(editPath)
+                if(editPath && !placingNodes)
                     path.m_Path[i].Position = Handles.PositionHandle(path.m_Path[i].Position, Quaternion.identity);
                 else
                 {
@@ -114,7 +118,7 @@ public class MovementPathEditor : Editor
                         
                     }
                 }
-                else if(i == path.m_Path.Count - 1 && path.m_Mode == MovementPath.PathType.CIRCUIT)
+                else if(i == path.m_Path.Count - 1 && path.m_Mode == MovementPath.PathType.CIRCUIT && !placingNodes)
                 {
                     Vector3 pathvector = path.m_Path[0].Position - path.m_Path[i].Position;
                     Handles.DrawLine(path.m_Path[i].Position - Vector3.up, path.m_Path[0].Position  - Vector3.up);
@@ -146,6 +150,14 @@ public class MovementPathEditor : Editor
                         HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                     }
                     Handles.color = Color.green;
+                    if(path.m_Path.Count != 0)
+                    {
+                        Handles.DrawLine(path.m_Path[path.m_Path.Count - 1].Position - Vector3.up, hit.point);
+                        if(path.m_Mode == MovementPath.PathType.CIRCUIT)
+                        {
+                            Handles.DrawLine(path.m_Path[0].Position - Vector3.up, hit.point);
+                        }
+                    }
                     Handles.DrawSolidDisc(hit.point, hit.normal, 0.5f);
 
                 }

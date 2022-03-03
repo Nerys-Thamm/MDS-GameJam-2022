@@ -38,7 +38,7 @@ public class MovementPath : MonoBehaviour
         Gizmos.color = m_PathColor;
         foreach (var node in m_Path)
         {
-            Gizmos.DrawCube(node.Position, Vector3.one *0.5f);
+            //Gizmos.DrawCube(node.Position, Vector3.one *0.5f);
         }
     }
 
