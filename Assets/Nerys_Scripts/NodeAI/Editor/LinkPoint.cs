@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NodeAI
-{
+namespace NodeAI;
+
     public enum LinkType
     {
         Input,
@@ -55,4 +55,3 @@ namespace NodeAI
         }
         
     }
-}

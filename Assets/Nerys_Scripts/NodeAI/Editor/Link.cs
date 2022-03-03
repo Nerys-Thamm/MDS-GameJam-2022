@@ -4,8 +4,8 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-namespace NodeAI
-{
+namespace NodeAI;
+
     public class Link 
     {
         public LinkPoint input;
@@ -40,4 +40,4 @@ namespace NodeAI
             }
         }
     }
-}
+

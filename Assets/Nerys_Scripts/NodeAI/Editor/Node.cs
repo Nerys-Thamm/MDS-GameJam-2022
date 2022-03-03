@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using System;
 
-namespace NodeAI
-{
+namespace NodeAI;
+
     public class Node 
     {
         public Rect rect;
@@ -149,4 +149,4 @@ namespace NodeAI
         }
         
     }
-}
+
