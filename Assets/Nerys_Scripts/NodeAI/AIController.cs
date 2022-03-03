@@ -15,9 +15,9 @@ public class AIController : ScriptableObject
 
         public enum ParameterType
         {
-            Float,
-            Int,
-            Bool
+            Float = 0,
+            Int = 1,
+            Bool = 2
         }
         public ParameterType type = ParameterType.Float;
 

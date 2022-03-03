@@ -22,6 +22,8 @@ public class Node
 
     public LinkPoint miscOutput;
 
+    public LinkPoint conditionTrueOutput, conditionFalseOutput;
+
     public Action<Node> OnRemove;
 
     public List<NodeField> fields;
@@ -80,32 +82,32 @@ public class Node
         {
             this.name = name;
             this.fvalue = value;
-            this.type = FieldType.Int;
+            this.type = FieldType.Float;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
             if(hasInput)
             {
-                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Float, inputStyle, OnClickInput);
             }
             if(hasOutput)
             {
-                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Float, outputStyle, OnClickOutput);
             }
         }
         public NodeField(Node parent, string name, bool value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.bvalue = value;
-            this.type = FieldType.Int;
+            this.type = FieldType.Bool;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
             if(hasInput)
             {
-                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+                this.input = new LinkPoint(parent, LinkType.Input, LinkDataType.Bool, inputStyle, OnClickInput);
             }
             if(hasOutput)
             {
-                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+                this.output = new LinkPoint(parent, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
             }
         }
 
@@ -158,6 +160,16 @@ public class Node
     //Parameter Node:
     public AIController.Parameter parameter;
 
+    //Logic Node:
+    public enum LogicType
+    {
+        AND,
+        OR,
+        NOT,
+        XOR
+    }
+    public LogicType logicType;
+
 
 
     public Node(
@@ -192,6 +204,13 @@ public class Node
             case NodeType.Condition:
                 this.type = NodeType.Condition;
                 this.title = "Condition";
+                conditionTrueOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
+                conditionFalseOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
+                seqOutput = null;
+                this.fields = new List<NodeField>()
+                {
+                    new NodeField(this, "Input", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                };
                 break;
             case NodeType.Action:
                 this.type = NodeType.Action;
@@ -200,6 +219,12 @@ public class Node
             case NodeType.Logic:
                 this.type = NodeType.Logic;
                 this.title = "Logic";
+                this.fields = new List<NodeField>()
+                {
+                    new NodeField(this, "Input A", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle),
+                    new NodeField(this, "Input B", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                };
+                this.miscOutput = new LinkPoint(this, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
                 break;
             case NodeType.Delay:
                 this.type = NodeType.Delay;
@@ -295,6 +320,31 @@ public class Node
                         break;
                 }
                 miscOutput.Draw(2);
+                break;
+            case NodeType.Logic:
+                miscOutput.Draw(fields.Count);
+                switch(logicType)
+                {
+                    case LogicType.AND:
+                    title = "AND | Logic";
+                    break;
+                    case LogicType.OR:
+                    title = "OR | Logic";
+                    break;
+                    case LogicType.NOT:
+                    title = "NOT | Logic";
+                    break;
+                    case LogicType.XOR:
+                    title = "XOR | Logic";
+                    break;
+                }
+                break;
+            case NodeType.Condition:
+                title = "IF | Condition";
+                conditionTrueOutput.Draw(2);
+                EditorGUI.LabelField(new Rect(rect.x + (rect.width - 45), (rect.y - 5) + ( EditorGUIUtility.singleLineHeight * 3), 80, 20), "True:");
+                conditionFalseOutput.Draw(3);
+                EditorGUI.LabelField(new Rect(rect.x + (rect.width - 45), (rect.y - 5) + ( EditorGUIUtility.singleLineHeight * 4), 80, 20), "False:");
                 break;
         }
         if(fields != null)

@@ -320,6 +320,31 @@ public class NodeAIEditor : EditorWindow
             if(controller.parameters == null) controller.parameters = new List<AIController.Parameter>();
             controller.parameters.Add(controller.nodes[controller.nodes.Count - 1].parameter);
         });
+        genericMenu.AddItem(new GUIContent("Add Node/Logic/AND"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.AND;
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Logic/OR"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.OR;
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Logic/NOT"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.NOT;
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Logic/XOR"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            controller.nodes.Add(new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnClickInput, OnClickOutput, OnRemoveNode, Node.NodeType.Logic, false));
+            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.XOR;
+        });
+        
         genericMenu.ShowAsContext();
     }
 
@@ -327,13 +352,15 @@ public class NodeAIEditor : EditorWindow
     {
         selectedInput = linkPoint;
 
-        if(selectedOutput != null && selectedInput != selectedOutput && selectedInput.dataType == selectedOutput.dataType)
+        if(selectedOutput != null && selectedInput != selectedOutput)
         {
             if(controller.links == null) controller.links = new List<Link>();
-            MakeLink();
+            if(selectedInput.dataType == selectedOutput.dataType)
+                MakeLink();
             selectedOutput = null;
             selectedInput = null;
         }
+        
         
     }
 
@@ -341,13 +368,15 @@ public class NodeAIEditor : EditorWindow
     {
         selectedOutput = linkPoint;
 
-        if(selectedInput != null && selectedInput != selectedOutput && selectedInput.dataType == selectedOutput.dataType)
+        if(selectedInput != null && selectedInput != selectedOutput)
         {
             if(controller.links == null) controller.links = new List<Link>();
-            MakeLink();
+            if(selectedInput.dataType == selectedOutput.dataType)
+                MakeLink();
             selectedInput = null;
             selectedOutput = null;
         }
+        
         
     }
 
@@ -356,7 +385,10 @@ public class NodeAIEditor : EditorWindow
         if(selectedOutput != null)
         {
             if(controller.links == null) controller.links = new List<Link>();
-            controller.links.Add(new Link(selectedOutput, selectedInput, RemoveLink));
+            Link newLink = new Link(selectedOutput, selectedInput, RemoveLink);
+            controller.links.Add(newLink);
+            selectedInput.links.Add(newLink);
+            selectedOutput.links.Add(newLink);
             selectedOutput = null;
         }
     }
@@ -365,6 +397,8 @@ public class NodeAIEditor : EditorWindow
     {
         if(controller.links.Contains(link))
         {
+            link.input.links.Remove(link);
+            link.output.links.Remove(link);
             controller.links.Remove(link);
         }
     }

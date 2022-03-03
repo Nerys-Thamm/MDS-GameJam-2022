@@ -14,10 +14,10 @@ using UnityEditor;
 
     public enum LinkDataType
     {
-        Float,
-        Int,
-        Bool,
-        Sequence
+        Float = 0,
+        Int = 1,
+        Bool = 2,
+        Sequence = 3
     }
 
     public class LinkPoint 
@@ -31,12 +31,15 @@ using UnityEditor;
 
         public GUIStyle style;
 
+        public List<Link> links = new List<Link>();
+
         public Action<LinkPoint> OnClick;
 
         public LinkPoint(Node node, LinkType type, LinkDataType dataType, GUIStyle style, Action<LinkPoint> OnClick)
         {
             this.node = node;
             this.type = type;
+            this.dataType = dataType;
             this.style = style;
             this.OnClick = OnClick;
             rect = new Rect(0, 0, 10, 20);
