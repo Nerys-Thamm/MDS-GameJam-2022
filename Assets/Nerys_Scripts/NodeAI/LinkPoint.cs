@@ -3,15 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Events;
 
 //namespace NodeAI;
-    
+    [System.Serializable]
+    public class LinkPointEvent : UnityEvent<LinkPoint> { };
+    [System.Serializable]
     public enum LinkType
     {
         Input,
         Output
     }
-    
+    [System.Serializable]
     public enum LinkDataType
     {
         Float = 0,
@@ -36,16 +39,16 @@ using UnityEditor;
         public GUIStyle style;
         [NonSerialized]
         public List<Link> links = new List<Link>();
-        [NonSerialized]
-        public Action<LinkPoint> OnClick;
+        [SerializeField]
+        public LinkPointEvent OnClickEvent;
 
-        public LinkPoint(string NodeID, LinkType type, LinkDataType dataType, GUIStyle style, Action<LinkPoint> OnClick)
+        public LinkPoint(string NodeID, LinkType type, LinkDataType dataType, GUIStyle style, LinkPointEvent OnClickEvent)
         {
             this.NodeID = NodeID;
             this.type = type;
             this.dataType = dataType;
             this.style = style;
-            this.OnClick = OnClick;
+            this.OnClickEvent = OnClickEvent;
             rect = new Rect(0, 0, 10, 20);
         }
 
@@ -63,11 +66,12 @@ using UnityEditor;
                 this.rect.x = rect.x + rect.width - 8;
             }
 
-            if(GUI.Button(this.rect, "", style))
+            if(GUI.Button(this.rect, "", EditorStyles.miniButton))
             {
-                if(OnClick != null)
+                if(OnClickEvent != null)
                 {
-                    OnClick(this);
+                    //OnClick(this);
+                    OnClickEvent.Invoke(this);
                 }
             }
         }

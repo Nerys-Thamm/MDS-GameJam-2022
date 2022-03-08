@@ -3,31 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Events;
 
 
+[System.Serializable]
+public class NodeEvent : UnityEvent<Node> { };
 //namespace NodeAI;
 [System.Serializable]
 public class Node 
 {
     public string ID;
+    [SerializeField]
     public Rect rect;
     public string title;
     public bool isDragging;
     public bool selected;
+    [SerializeField]
     public GUIStyle style;
+    [SerializeField]
     public GUIStyle defaultStyle;
+    [SerializeField]
     public GUIStyle selectedStyle;
-    
+    [SerializeField]
     public LinkPoint seqInput;
-    
+    [SerializeField]
     public LinkPoint seqOutput;
-    
+    [SerializeField]
     public LinkPoint miscOutput;
-    
+    [SerializeField]
     public LinkPoint conditionTrueOutput, conditionFalseOutput;
-    
-    public Action<Node> OnRemove;
-    
+    [SerializeField]
+    public NodeEvent OnRemove;
+    [SerializeField]
     public List<NodeField> fields;
 
 
@@ -41,7 +48,7 @@ public class Node
         Parameter,
         Entry
     }
-    
+    [Serializable]
     public class NodeField
     {
         public FieldType type;
@@ -53,9 +60,9 @@ public class Node
 
         public bool hasInput;
         public bool hasOutput;
-        
+        [SerializeField]
         public LinkPoint input;
-        
+        [SerializeField]
         public LinkPoint output;
         public NodeField(string name, string value)
         {
@@ -64,7 +71,7 @@ public class Node
             this.type = FieldType.String;
             
         }
-        public NodeField(string ID, string name, int value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, int value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.ivalue = value;
@@ -81,7 +88,7 @@ public class Node
             }
         }
         
-        public NodeField(string ID, string name, float value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, float value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.fvalue = value;
@@ -97,7 +104,7 @@ public class Node
                 this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Float, outputStyle, OnClickOutput);
             }
         }
-        public NodeField(string ID, string name, bool value, bool hasInput, Action<LinkPoint> OnClickInput, GUIStyle inputStyle, bool hasOutput, Action<LinkPoint> OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, bool value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
         {
             this.name = name;
             this.bvalue = value;
@@ -193,9 +200,9 @@ public class Node
         GUIStyle selectedStyle,
         GUIStyle inputStyle, 
         GUIStyle outputStyle, 
-        Action<LinkPoint> OnClickInput, 
-        Action<LinkPoint> OnClickOutput,
-        Action<Node> OnClickRemove,
+        LinkPointEvent OnClickInput, 
+        LinkPointEvent OnClickOutput,
+        NodeEvent OnClickRemove,
         NodeType type,
         bool hasSequenceLinks = true
         )
@@ -255,6 +262,8 @@ public class Node
                     this.parameter.type = AIController.Parameter.ParameterType.Float;
                     this.parameter.fvalue = 0;
                 }
+                this.seqOutput = null;
+                this.seqInput = null;
                 this.type = NodeType.Parameter;
                 this.miscOutput = new LinkPoint(this.ID, LinkType.Output, (LinkDataType)this.parameter.type, outputStyle, OnClickOutput);
                 this.title = "Parameter";
@@ -280,7 +289,7 @@ public class Node
         GUIStyle nodeStyle, 
         GUIStyle selectedStyle, 
         GUIStyle outputStyle,  
-        Action<LinkPoint> OnClickOutput
+        LinkPointEvent OnClickOutput
         )
     {
         rect = new Rect(position.x, position.y, width, height);
@@ -423,7 +432,7 @@ public class Node
     {
         if(OnRemove != null)
         {
-            OnRemove(this);
+            OnRemove.Invoke(this);
         }
     }
 

@@ -3,24 +3,29 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Events;
 
 //namespace NodeAI;
-
+    [System.Serializable]
+    public class LinkEvent : UnityEvent<Link> { };
     [System.Serializable]
     public class Link 
     {
-        
+        [SerializeField]
         public LinkPoint input;
-        
+        [SerializeField]
         public LinkPoint output;
-        public Action<Link> OnClick;
+        //public Action<Link> OnClick;
+        [SerializeField]
+        public LinkEvent OnClickEvent;
 
-        public Link(LinkPoint input, LinkPoint output, Action<Link> OnClick)
+        public Link(LinkPoint input, LinkPoint output, LinkEvent OnClickEvent)
         {
             this.input = input;
             this.output = output;
-            this.OnClick = OnClick;
+            this.OnClickEvent = OnClickEvent;
         }
+        
 
         public void Draw()
         {
@@ -36,11 +41,16 @@ using UnityEditor;
 
             if(Handles.Button((input.rect.center + output.rect.center) * 0.5f, Quaternion.identity, 4, 8, Handles.RectangleHandleCap))
             {
-                if(OnClick != null)
+                if(OnClickEvent != null)
                 {
-                    OnClick(this);
+                    OnClickEvent.Invoke(this);
                 }
             }
+        }
+
+        public void ProcessLink()
+        {
+
         }
 
         

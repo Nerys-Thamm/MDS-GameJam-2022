@@ -43,9 +43,24 @@ public class AIController : ScriptableObject
         return null;
     }
 
+    private string GenerateRandomString(int length)
+    {
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        string result = "";
+        for(int i = 0; i < length; i++)
+        {
+            result += chars[UnityEngine.Random.Range(0, chars.Length)];
+        }
+        return result;
+    }
+
     public void AddNode(Node node)
     {
         nodes.Add(node);
+        if(node.ID == null || node.ID == "")
+        {
+            node.ID = GenerateRandomString(20);
+        }
         if(nodeDictionary == null) nodeDictionary = new Dictionary<string, Node>();
         nodeDictionary.Add(node.ID, node);
     }
@@ -69,7 +84,7 @@ public class AIController : ScriptableObject
         
     }
 
-    public void ReconnectLinks(Action<LinkPoint> OnClickInput ,Action<LinkPoint> OnClickOutput)
+    public void ReconnectLinks()
     {
         foreach(Link link in links)
         {
@@ -81,14 +96,8 @@ public class AIController : ScriptableObject
             {
                 link.input.links.Add(link);
             }
-            if(link.input.OnClick != OnClickInput)
-            {
-                link.input.OnClick = OnClickInput;
-            }
-            if(link.output.OnClick != OnClickOutput)
-            {
-                link.output.OnClick = OnClickOutput;
-            }
+                
+            
         }
     }
 
