@@ -596,7 +596,7 @@ public class NodeAIEditor : EditorWindow
         {
             link.input.linkIDs.Remove(link.ID);
             link.output.linkIDs.Remove(link.ID);
-            controller.RemoveLink(link);
+            controller.links.Remove(link);
         }
     }
 

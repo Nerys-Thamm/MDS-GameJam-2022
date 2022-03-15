@@ -150,19 +150,19 @@ public class Node
                 
             if(type == FieldType.String)
             {
-                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), rect.width - 90, 20), svalue);
+                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), rect.width - 100, 20), svalue);
             }
             else if(type == FieldType.Int)
             {
-                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), ivalue);
+                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), ivalue);
             }
             else if(type == FieldType.Float)
             {
-                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), fvalue);
+                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), fvalue);
             }
             else if(type == FieldType.Bool)
             {
-                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 90, 20), bvalue);
+                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), bvalue);
             }
 
             if(input != null)
@@ -277,6 +277,10 @@ public class Node
             case NodeType.Action:
                 this.type = NodeType.Action;
                 this.title = "Action";
+                this.fields = new List<NodeField>()
+                {
+                    new NodeField("Name", "New Action", 0)
+                };
                 break;
             case NodeType.Logic:
                 this.type = NodeType.Logic;
@@ -293,7 +297,7 @@ public class Node
                 this.title = "Delay";
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this.ID, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0)
+                    new NodeField(this.ID, "Delay", 0.0f, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0)
                 };
                 break;
             case NodeType.Parameter:
