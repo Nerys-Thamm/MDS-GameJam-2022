@@ -34,16 +34,71 @@ public class AIController : ScriptableObject
     [SerializeField]
     public Dictionary<string, Node> nodeDictionary;
 
-    public Node GetNodeFromID(string id)
+    [SerializeField]
+    public Dictionary<string, Link> linkDictionary;
+
+    public Link GetLinkFromID(string id)
     {
-        if(nodeDictionary.ContainsKey(id))
+        if(linkDictionary != null)
         {
-            return nodeDictionary[id];
+            if(linkDictionary.ContainsKey(id))
+            {
+                return linkDictionary[id];
+            }
+        }
+        else
+        {
+            foreach(Link link in links)
+            {
+                if(link.ID == id)
+                {
+                    return link;
+                }
+            }
         }
         return null;
     }
 
-    private string GenerateRandomString(int length)
+    public void AddLink(Link link)
+    {
+        links.Add(link);
+        link.ID = GenerateRandomString(20);
+        if(linkDictionary == null)
+        {
+            linkDictionary = new Dictionary<string, Link>();
+        }
+        linkDictionary.Add(link.ID, link);
+    }
+
+    public void RemoveLink(Link link)
+    {
+        links.Remove(link);
+        if(linkDictionary != null) linkDictionary.Remove(link.ID);
+    }
+
+    public Node GetNodeFromID(string id)
+    {
+        if(nodeDictionary != null)
+        {
+            if(nodeDictionary.ContainsKey(id))
+            {
+                return nodeDictionary[id];
+            }
+        }
+        else
+        {
+            foreach(Node node in nodes)
+            {
+                if(node.ID == id)
+                {
+                    return node;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static string GenerateRandomString(int length)
     {
         string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         string result = "";
@@ -57,10 +112,10 @@ public class AIController : ScriptableObject
     public void AddNode(Node node)
     {
         nodes.Add(node);
-        if(node.ID == null || node.ID == "")
-        {
-            node.ID = GenerateRandomString(20);
-        }
+        // if(node.ID == null || node.ID == "")
+        // {
+        //     node.ID = GenerateRandomString(20);
+        // }
         if(nodeDictionary == null) nodeDictionary = new Dictionary<string, Node>();
         nodeDictionary.Add(node.ID, node);
     }
@@ -84,22 +139,27 @@ public class AIController : ScriptableObject
         
     }
 
-    public void ReconnectLinks()
+    public void RecreateButtons()
     {
-        foreach(Link link in links)
-        {
-            if(!link.input.links.Contains(link))
-            {
-                link.input.links.Add(link);
-            }
-            if(!link.output.links.Contains(link))
-            {
-                link.input.links.Add(link);
-            }
+        
+    }
+
+    // public void ReconnectLinks()
+    // {
+    //     foreach(Link link in links)
+    //     {
+    //         if(!link.input.linkIDs.Contains(link.ID))
+    //         {
+    //             link.input.linkIDs.Add(link.ID);
+    //         }
+    //         if(!link.output.linkIDs.Contains(link.ID))
+    //         {
+    //             link.input.linkIDs.Add(link.ID);
+    //         }
                 
             
-        }
-    }
+    //     }
+    // }
 
     
 }

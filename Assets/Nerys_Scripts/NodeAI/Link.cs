@@ -14,6 +14,8 @@ using UnityEngine.Events;
         [SerializeField]
         public LinkPoint input;
         [SerializeField]
+        public string ID;
+        [SerializeField]
         public LinkPoint output;
         //public Action<Link> OnClick;
         [SerializeField]
@@ -26,7 +28,10 @@ using UnityEngine.Events;
             this.OnClickEvent = OnClickEvent;
         }
         
-
+        public void RelinkEvents(LinkEvent OnClickEvent)
+        {
+            this.OnClickEvent = OnClickEvent;
+        }
         public void Draw()
         {
             Handles.DrawBezier(

@@ -25,7 +25,7 @@ using UnityEngine.Events;
     [System.Serializable]
     public class LinkPoint 
     {
-        [SerializeField]
+        public int fieldIndex = 0;
         public Rect rect;
         [SerializeField]
         public LinkType type;
@@ -37,8 +37,8 @@ using UnityEngine.Events;
         public Node node;
         [SerializeField]
         public GUIStyle style;
-        [NonSerialized]
-        public List<Link> links = new List<Link>();
+        [SerializeField]
+        public List<string> linkIDs;
         [SerializeField]
         public LinkPointEvent OnClickEvent;
 
@@ -50,6 +50,30 @@ using UnityEngine.Events;
             this.style = style;
             this.OnClickEvent = OnClickEvent;
             rect = new Rect(0, 0, 10, 20);
+        }
+
+        public void ReconnectEvents(LinkPointEvent OnClickEvent)
+        {
+            this.OnClickEvent = OnClickEvent;
+        }
+
+        public void ReconnectLinks(AIController controller)
+        {
+            foreach (string linkID in linkIDs)
+            {
+                Link link = controller.GetLinkFromID(linkID);
+                if (link != null)
+                {
+                    if(type == LinkType.Output)
+                    {
+                        link.input = this;
+                    }
+                    else
+                    {
+                        link.output = this;
+                    }
+                }
+            }
         }
 
         public void Draw(int line, Rect rect)

@@ -52,6 +52,7 @@ public class Node
     public class NodeField
     {
         public FieldType type;
+        public int index = 0;
         public string name;
         public string svalue;
         public int ivalue;
@@ -64,63 +65,77 @@ public class Node
         public LinkPoint input;
         [SerializeField]
         public LinkPoint output;
-        public NodeField(string name, string value)
+        public NodeField(string name, string value, int index)
         {
             this.name = name;
             this.svalue = value;
             this.type = FieldType.String;
+            this.index = index;
             
         }
-        public NodeField(string ID, string name, int value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, int value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
             this.ivalue = value;
             this.type = FieldType.Int;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
+            this.index = index;
             if(hasInput)
             {
                 this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Int, inputStyle, OnClickInput);
+                this.input.fieldIndex = index;
             }
             if(hasOutput)
             {
                 this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Int, outputStyle, OnClickOutput);
+                this.output.fieldIndex = index;
             }
         }
         
-        public NodeField(string ID, string name, float value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, float value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
             this.fvalue = value;
             this.type = FieldType.Float;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
+            this.index = index;
             if(hasInput)
             {
                 this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Float, inputStyle, OnClickInput);
+                this.input.fieldIndex = index;
             }
             if(hasOutput)
             {
                 this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Float, outputStyle, OnClickOutput);
+                this.output.fieldIndex = index;
             }
         }
-        public NodeField(string ID, string name, bool value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle)
+        public NodeField(string ID, string name, bool value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
             this.bvalue = value;
             this.type = FieldType.Bool;
             this.hasInput = hasInput;
             this.hasOutput = hasOutput;
+            this.index = index;
             if(hasInput)
             {
                 this.input = new LinkPoint(ID, LinkType.Input, LinkDataType.Bool, inputStyle, OnClickInput);
+                this.input.fieldIndex = index;
             }
             if(hasOutput)
             {
                 this.output = new LinkPoint(ID, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
+                this.output.fieldIndex = index;
             }
         }
-
+        public void RelinkEvents(LinkPointEvent OnClickInput, LinkPointEvent OnClickOutput)
+        {
+            this.input.ReconnectEvents(OnClickInput);
+            this.output.ReconnectEvents(OnClickOutput);
+        }
         public enum FieldType
         {
             String,
@@ -191,7 +206,33 @@ public class Node
 
     public StateType stateType;
 
+    public void RelinkEvents(LinkPointEvent OnClickInput, LinkPointEvent OnClickOutput, NodeEvent OnClickRemove)
+    {
+        if(seqInput != null) seqInput.ReconnectEvents(OnClickInput);
+        if(seqOutput != null) seqOutput.ReconnectEvents(OnClickOutput);
+        if(miscOutput != null) miscOutput.ReconnectEvents(OnClickOutput);
+        if(conditionTrueOutput != null) conditionTrueOutput.ReconnectEvents(OnClickOutput);
+        if(conditionFalseOutput != null) conditionFalseOutput.ReconnectEvents(OnClickOutput);
+        foreach(NodeField field in fields)
+        {
+            field.RelinkEvents(OnClickInput, OnClickOutput);
+        }
+        OnRemove = OnClickRemove;
+    }
 
+    public void ReconnectLinks(AIController controller)
+    {
+        if(seqInput != null) seqInput.ReconnectLinks(controller);
+        if(seqOutput != null) seqOutput.ReconnectLinks(controller);
+        if(miscOutput != null) miscOutput.ReconnectLinks(controller);
+        if(conditionTrueOutput != null) conditionTrueOutput.ReconnectLinks(controller);
+        if(conditionFalseOutput != null) conditionFalseOutput.ReconnectLinks(controller);
+        foreach(NodeField field in fields)
+        {
+            if(field.input != null) field.input.ReconnectLinks(controller);
+            if(field.output != null) field.output.ReconnectLinks(controller);
+        }
+    }
     public Node(
         Vector2 position, 
         float width, 
@@ -209,12 +250,13 @@ public class Node
     {
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
+        this.ID = AIController.GenerateRandomString(20);
         if(hasSequenceLinks)
         {
             seqInput = new LinkPoint(ID, LinkType.Input, LinkDataType.Sequence, inputStyle, OnClickInput);
             seqOutput = new LinkPoint(ID, LinkType.Output,  LinkDataType.Sequence, outputStyle, OnClickOutput);
         }
-
+        
         switch(type)
         {
             case NodeType.State:
@@ -229,7 +271,7 @@ public class Node
                 seqOutput = null;
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this.ID, "Input", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Input", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0)
                 };
                 break;
             case NodeType.Action:
@@ -241,8 +283,8 @@ public class Node
                 this.title = "Logic";
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this.ID, "Input A", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle),
-                    new NodeField(this.ID, "Input B", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Input A", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0),
+                    new NodeField(this.ID, "Input B", false, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 1)
                 };
                 this.miscOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
                 break;
@@ -251,7 +293,7 @@ public class Node
                 this.title = "Delay";
                 this.fields = new List<NodeField>()
                 {
-                    new NodeField(this.ID, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle)
+                    new NodeField(this.ID, "Delay", 0, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0)
                 };
                 break;
             case NodeType.Parameter:
@@ -294,12 +336,14 @@ public class Node
     {
         rect = new Rect(position.x, position.y, width, height);
         style = nodeStyle;
+        this.ID = "EntryNode";
         seqInput = null;
         seqOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Sequence, outputStyle, OnClickOutput);
 
         defaultStyle = nodeStyle;
         this.selectedStyle = selectedStyle;
         title = "Entry";
+        
         type = NodeType.Entry;
         OnRemove = null;
     }
@@ -320,7 +364,7 @@ public class Node
         switch(type)
         {
             case NodeType.State:
-                title = EditorGUI.TextField(new Rect(rect.x + rect.width - 60, rect.y + 5, 60, 20), title);
+                
                 break;
             case NodeType.Parameter:
                 

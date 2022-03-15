@@ -130,6 +130,18 @@ public class NodeAIEditor : EditorWindow
                 }
             }
         }
+        if(controller != null)
+        {
+            foreach(Node n in controller.nodes)
+            {
+                n.RelinkEvents(OnInputEvent, OnOutputEvent, OnNodeEvent);
+                n.ReconnectLinks(controller);
+            }
+            foreach(Link l in controller.links)
+            {
+                l.RelinkEvents(OnLinkEvent);
+            }
+        }
     }
 
     private void OnGUI()
@@ -344,6 +356,7 @@ public class NodeAIEditor : EditorWindow
         {
             foreach(Link link in controller.links)
             {
+                
                 link.Draw();
             }
         }
@@ -425,7 +438,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.State);
             newNode.stateType = Node.StateType.Idle;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/State/SEEK"), false, () =>
@@ -434,7 +447,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.State);
             
             newNode.stateType = Node.StateType.Seek;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/State/FLEE"), false, () =>
@@ -443,7 +456,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.State);
             
             newNode.stateType = Node.StateType.Flee;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/State/WANDER"), false, () =>
@@ -452,7 +465,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.State);
             
             newNode.stateType = Node.StateType.Wander;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Condition"), false, () =>
@@ -460,7 +473,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Condition);
             
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Action"), false, () =>
@@ -468,7 +481,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Action);
             
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Delay"), false, () =>
@@ -476,7 +489,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Delay);
             
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Parameter"), false, () =>
@@ -487,7 +500,7 @@ public class NodeAIEditor : EditorWindow
             controller.nodes[controller.nodes.Count - 1].parameter = new AIController.Parameter();
             if(controller.parameters == null) controller.parameters = new List<AIController.Parameter>();
             controller.parameters.Add(controller.nodes[controller.nodes.Count - 1].parameter);
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/AND"), false, () =>
@@ -496,7 +509,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.AND;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/OR"), false, () =>
@@ -505,7 +518,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.OR;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/NOT"), false, () =>
@@ -514,7 +527,7 @@ public class NodeAIEditor : EditorWindow
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.NOT;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
         genericMenu.AddItem(new GUIContent("Add Node/Logic/XOR"), false, () =>
@@ -522,7 +535,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.XOR;
-            newNode.ID = GenerateRandomString(20);
+            
             controller.AddNode(newNode);
         });
 
@@ -568,9 +581,11 @@ public class NodeAIEditor : EditorWindow
         {
             if(controller.links == null) controller.links = new List<Link>();
             Link newLink = new Link(selectedOutput, selectedInput, OnLinkEvent);
-            controller.links.Add(newLink);
-            selectedInput.links.Add(newLink);
-            selectedOutput.links.Add(newLink);
+            controller.AddLink(newLink);
+            if(selectedInput.linkIDs == null) selectedInput.linkIDs = new List<string>();
+            if(selectedOutput.linkIDs == null) selectedOutput.linkIDs = new List<string>();
+            selectedInput.linkIDs.Add(newLink.ID);
+            selectedOutput.linkIDs.Add(newLink.ID);
             selectedOutput = null;
         }
     }
@@ -579,9 +594,9 @@ public class NodeAIEditor : EditorWindow
     {
         if(controller.links.Contains(link))
         {
-            link.input.links.Remove(link);
-            link.output.links.Remove(link);
-            controller.links.Remove(link);
+            link.input.linkIDs.Remove(link.ID);
+            link.output.linkIDs.Remove(link.ID);
+            controller.RemoveLink(link);
         }
     }
 
@@ -600,7 +615,7 @@ public class NodeAIEditor : EditorWindow
             }
             foreach(Link link in linksToRemove)
             {
-                controller.links.Remove(link);
+                RemoveLink(link);
             }
             linksToRemove = null;
         }
