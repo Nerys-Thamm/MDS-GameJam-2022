@@ -410,11 +410,11 @@ public class NodeAI_Agent : MonoBehaviour
         }
         else if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
         {
-            node.fields[0].bvalue = ComputeLogicNode(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.node);
+            node.fields[0].bvalue = ComputeLogicNode(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID));
         }
         else if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Comparison)
         {
-            node.fields[0].bvalue = ComputeComparisonNode(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.node);
+            node.fields[0].bvalue = ComputeComparisonNode(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID));
         }
         if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
         {
@@ -422,11 +422,11 @@ public class NodeAI_Agent : MonoBehaviour
         }
         else if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
         {
-            node.fields[1].bvalue = ComputeLogicNode(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.node);
+            node.fields[1].bvalue = ComputeLogicNode(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID));
         }
         else if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Comparison)
         {
-            node.fields[1].bvalue = ComputeComparisonNode(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.node);
+            node.fields[1].bvalue = ComputeComparisonNode(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID));
         }
         bool A = node.fields[0].bvalue;
         bool B = node.fields[1].bvalue;
