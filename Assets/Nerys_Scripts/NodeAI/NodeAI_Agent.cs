@@ -7,74 +7,78 @@ using UnityEngine.AI;
 public class NodeAI_Agent : MonoBehaviour
 {
     [HideInInspector]
-    public Node.StateType currentState;
+    public Node.StateType currentState; // The current state of the agent
     [HideInInspector]
-    public Node currentStateEntryNode;
-    public AIController NodeAIController;
+    public Node currentStateEntryNode; // The node that the agent entered the current state from
+    public AIController NodeAIController; // The controller for the agent
     [HideInInspector]
-    public AIController controller;
-    private float delayTimer;
+    public AIController controller; // The controller for the agent (Local)
+    private float delayTimer; // The delay timer for the agent
     [HideInInspector]
-    public Node currentSequenceNode;
+    public Node currentSequenceNode; // The current node in the sequence
     [HideInInspector]
-    public Node previousSequenceNode;
+    public Node previousSequenceNode; // The previous node in the sequence
     [SerializeField]
-    public List<Action> actions;
+    public List<Action> actions; // The list of actions for the agent
 
-    public NavMeshAgent agent;
+    public NavMeshAgent agent; // The navmesh agent for the agent
 
 
-
+    //Action
+    //Description:
+    //The action struct for the agent
     [System.Serializable]
     public struct Action
     {
-        public string name;
-        public UnityEvent action;
+        public string name; // The name of the action
+        public UnityEvent action; // The action
     }
-
+    
+    //Start
     void Start()
     {
-        controller = Instantiate(NodeAIController);
-        if(controller != null)
+        controller = Instantiate(NodeAIController); // Create a copy of the controller
+        if(controller != null) 
         {
-            foreach(Node n in controller.nodes)
+            foreach(Node n in controller.nodes) 
             {
-                n.ReconnectLinks(controller);
+                n.ReconnectLinks(controller); // Reconnect the links for the nodes
             }
             
         }
-        currentState = Node.StateType.Idle;
-        currentStateEntryNode = controller.nodes[0];
-        currentSequenceNode = currentStateEntryNode;
-        previousSequenceNode = currentStateEntryNode;
+        currentState = Node.StateType.Idle; // Set the current state to idle
+        currentStateEntryNode = controller.nodes[0]; // Set the current state entry node to the first node
+        currentSequenceNode = currentStateEntryNode; // Set the current sequence node to the current state entry node
+        previousSequenceNode = currentStateEntryNode; // Set the previous sequence node to the current state entry node
         
     }
 
+    //Update
     void Update()
     {
         //AI Update
-        if(delayTimer > 0.0f)
+        if(delayTimer > 0.0f) 
         {
-            delayTimer -= Time.deltaTime;
+            delayTimer -= Time.deltaTime; // Decrease the delay timer
         }
         else
         {
-            if(currentSequenceNode != null) HandleNode(currentSequenceNode);
+            if(currentSequenceNode != null) HandleNode(currentSequenceNode); // Handle the current sequence node
         }
 
         //State Logic
-        switch(currentState)
+        switch(currentState) 
         {
-            case Node.StateType.Idle:
+            case Node.StateType.Idle: // If the agent is idle
                 DoIdleState();
                 break;
-            case Node.StateType.Seek:
+            case Node.StateType.Seek: // If the agent is seeking
                 DoSeekState();
                 break;
-            case Node.StateType.Flee:
+            case Node.StateType.Flee: // If the agent is fleeing
                 DoFleeState();
                 break;
-            case Node.StateType.Wander:
+            case Node.StateType.Wander: // If the agent is wandering
                 DoWanderState();
                 break;
             default:
@@ -82,25 +86,35 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //DoWanderState
+    //Description:
+    //Handles the wander state for the agent
     private void DoWanderState()
     {
         //Do Wander State
-        if(agent.remainingDistance < 0.1f)
+        if(agent.remainingDistance < 0.1f) 
         {
-            agent.SetDestination(GetWanderTarget());
+            agent.SetDestination(GetWanderTarget()); // Set the destination to the wander target
         }
-        agent.speed = currentStateEntryNode.stateVars.speed;
+        agent.speed = currentStateEntryNode.stateVars.speed; // Set the speed to the state speed
         
     }
 
+    //GetWanderTarget
+    //Description:
+    //Gets the wander target for the agent
     private Vector3 GetWanderTarget()
     {
+        //Use wander algorithm to find a new position and sample it on the navmesh
         Vector3 wanderTarget = transform.position + (currentStateEntryNode.stateVars.radius * transform.forward) + Random.insideUnitSphere * currentStateEntryNode.stateVars.radius;
         NavMeshHit hit;
         NavMesh.SamplePosition(wanderTarget, out hit, currentStateEntryNode.stateVars.radius, 1);
         return hit.position;
     }
 
+    //DoFleeState
+    //Description:
+    //Handles the flee state for the agent
     private void DoFleeState()
     {
         //Do Flee State
@@ -111,13 +125,17 @@ public class NodeAI_Agent : MonoBehaviour
         agent.speed = currentStateEntryNode.stateVars.speed;
     }
 
-    //Flee from objects with a given tag
+    //GetFleeTarget
+    //Parameters:
+    //string tag - The tag of the target to flee
+    //Description:
+    //Gets the flee target for the agent
     private Vector3 GetFleeTarget(string tag)
     {
-        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
-        Vector3 fleeTarget = transform.position;
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag); // Get all objects with the tag
+        Vector3 fleeTarget = transform.position; 
         float closestDistance = float.MaxValue;
-        foreach(GameObject obj in objects)
+        foreach(GameObject obj in objects) 
         {
             float distance = Vector3.Distance(transform.position, obj.transform.position);
             if(distance < closestDistance)
@@ -134,6 +152,9 @@ public class NodeAI_Agent : MonoBehaviour
         return hit.position;
     }
 
+    //DoIdleState
+    //Description:
+    //Handles the idle state for the agent
     private void DoIdleState()
     {
         //Do Idle State
@@ -143,6 +164,9 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //DoSeekState
+    //Description:
+    //Handles the seek state for the agent
     private void DoSeekState()
     {
         

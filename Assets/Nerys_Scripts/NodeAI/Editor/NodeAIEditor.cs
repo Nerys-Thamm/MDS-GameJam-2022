@@ -355,9 +355,8 @@ public class NodeAIEditor : EditorWindow
     {
         if(controller.links != null)
         {
-            foreach(Link link in controller.links)
+            foreach(Link link in controller.links.ToArray())
             {
-                
                 link.Draw();
             }
         }
@@ -509,7 +508,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
-            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.AND;
+            newNode.logicType = Node.LogicType.AND;
             
             controller.AddNode(newNode);
         });
@@ -518,7 +517,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
-            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.OR;
+            newNode.logicType = Node.LogicType.OR;
             
             controller.AddNode(newNode);
         });
@@ -527,7 +526,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             
-            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.NOT;
+            newNode.logicType = Node.LogicType.NOT;
             
             controller.AddNode(newNode);
         });
@@ -535,7 +534,7 @@ public class NodeAIEditor : EditorWindow
         {
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
-            controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.XOR;
+            newNode.logicType = Node.LogicType.XOR;
             
             controller.AddNode(newNode);
         });
@@ -544,7 +543,7 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Comparison, false);
             
-            controller.nodes[controller.nodes.Count - 1].comparisonType = Node.ComparisonType.Equal;
+            newNode.comparisonType = Node.ComparisonType.Equal;
             
             controller.AddNode(newNode);
         });
@@ -637,7 +636,7 @@ public class NodeAIEditor : EditorWindow
             }
             controller.nodes.Remove(node);
         }
-        if(controller.nodeDictionary.ContainsKey(node.ID))
+        if(controller.nodeDictionary != null && controller.nodeDictionary.ContainsKey(node.ID))
         {
             controller.nodeDictionary.Remove(node.ID);
         }

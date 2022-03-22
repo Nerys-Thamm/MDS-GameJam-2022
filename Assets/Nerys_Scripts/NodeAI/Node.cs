@@ -458,6 +458,18 @@ public class Node
         OnRemove = OnClickRemove;
     }
 
+    //Node Constructor
+    //Parameters:
+    //        Vector2 position: Position of the node
+    //        float width: Width of the node
+    //        float height: Height of the node
+    //        GUIStyle nodeStyle: Style of the node
+    //        GUIStyle selectedStyle: Style of the node when selected
+    //        GUIStyle inputStyle: Style of the input point
+    //        GUIStyle outputStyle: Style of the output point
+    //        LinkPointEvent OnClickOutput: Event for when the output is clicked
+    //Description:
+    //       Alternate constructor for the Entry node.
     public Node(
         Vector2 position, 
         float width, 
@@ -482,11 +494,20 @@ public class Node
         OnRemove = null;
     }
 
+    //Move
+    //Parameters:
+    //        Vector2 delta: The amount to move the node
+    //Description:
+    //       Moves the node by the delta amount
     public void Move(Vector2 delta)
     {
         rect.position += delta;
     }
 
+
+    //Draw
+    //Description:
+    //       Draws the node
     public void Draw()
     {
         if(seqInput != null)
@@ -593,6 +614,13 @@ public class Node
         
     }
 
+    //ProcessEvents
+    //Parameters:
+    //  Event e: The event to process
+    //Returns:
+    //  bool
+    //Description:
+    //  Processes the event passed in
     public bool ProcessEvents(Event e)
     {
         if(e.type == EventType.MouseDown)
@@ -634,6 +662,13 @@ public class Node
         return false;
     }
 
+    //ProcessContextMenu
+    //Parameters:
+    //  None
+    //Returns:
+    //  None
+    //Description:
+    //  Processes the context menu for the node
     private void ProcessContextMenu()
     {
         GenericMenu genericMenu = new GenericMenu();
@@ -641,6 +676,13 @@ public class Node
         genericMenu.ShowAsContext();
     }
 
+    //OnRemoveNode
+    //Parameters:
+    //  None
+    //Returns:
+    //  None
+    //Description:
+    //  Removes the node from the graph
     private void OnRemoveNode()
     {
         if(OnRemove != null)
