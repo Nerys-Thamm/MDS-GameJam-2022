@@ -616,7 +616,7 @@ public class NodeAIEditor : EditorWindow
             List<Link> linksToRemove = new List<Link>();
             for(int i = controller.links.Count - 1; i >= 0; i--)
             {
-                if(controller.links[i].input == node.seqInput || controller.links[i].output == node.seqOutput)
+                if(controller.links[i].input.NodeID == node.ID || controller.links[i].output.NodeID == node.ID)
                 {
                     linksToRemove.Add(controller.links[i]);
                 }

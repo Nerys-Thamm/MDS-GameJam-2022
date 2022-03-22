@@ -51,6 +51,11 @@ using UnityEngine.Events;
                     OnClickEvent.Invoke(this);
                 }
             }
+
+            if(input == null || output == null)
+            {
+                OnClickEvent.Invoke(this);
+            }
         }
 
         public void ProcessLink()
