@@ -7,6 +7,15 @@ using UnityEngine;
 
 public class AIController : ScriptableObject
 {
+
+    [System.Serializable]
+    public class StateVars
+    {
+        public float radius = 0.0f;
+        public string tag = "";
+        public float speed = 0.0f;
+    }
+
     [System.Serializable]
     public class Parameter
     {
@@ -112,10 +121,6 @@ public class AIController : ScriptableObject
     public void AddNode(Node node)
     {
         nodes.Add(node);
-        // if(node.ID == null || node.ID == "")
-        // {
-        //     node.ID = GenerateRandomString(20);
-        // }
         if(nodeDictionary == null) nodeDictionary = new Dictionary<string, Node>();
         nodeDictionary.Add(node.ID, node);
     }
@@ -144,22 +149,7 @@ public class AIController : ScriptableObject
         
     }
 
-    // public void ReconnectLinks()
-    // {
-    //     foreach(Link link in links)
-    //     {
-    //         if(!link.input.linkIDs.Contains(link.ID))
-    //         {
-    //             link.input.linkIDs.Add(link.ID);
-    //         }
-    //         if(!link.output.linkIDs.Contains(link.ID))
-    //         {
-    //             link.input.linkIDs.Add(link.ID);
-    //         }
-                
-            
-    //     }
-    // }
+    
 
     
 }

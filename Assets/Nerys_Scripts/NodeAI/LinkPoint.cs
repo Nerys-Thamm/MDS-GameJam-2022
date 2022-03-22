@@ -79,7 +79,7 @@ using UnityEngine.Events;
         public void Draw(int line, Rect rect)
         {
             this.rect = new Rect(0, 0, 10, 20);
-            this.rect.y = rect.y + 5 + ((EditorGUIUtility.singleLineHeight + 5) * line);
+            this.rect.y = rect.y + 5 + ((EditorGUIUtility.singleLineHeight + 3) * line);
 
             if(type == LinkType.Input)
             {

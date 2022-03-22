@@ -260,6 +260,7 @@ public class NodeAIEditor : EditorWindow
         }
         
         EditorGUILayout.EndHorizontal();
+        
 
         
     }
@@ -535,6 +536,15 @@ public class NodeAIEditor : EditorWindow
             if(controller.nodes == null) controller.nodes = new List<Node>();
             Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Logic, false);
             controller.nodes[controller.nodes.Count - 1].logicType = Node.LogicType.XOR;
+            
+            controller.AddNode(newNode);
+        });
+        genericMenu.AddItem(new GUIContent("Add Node/Comparison"), false, () =>
+        {
+            if(controller.nodes == null) controller.nodes = new List<Node>();
+            Node newNode = new Node(mousePosition, 200, 100, style, selectedStyle, inputStyle, outputStyle, OnInputEvent, OnOutputEvent, OnNodeEvent, Node.NodeType.Comparison, false);
+            
+            controller.nodes[controller.nodes.Count - 1].comparisonType = Node.ComparisonType.Equal;
             
             controller.AddNode(newNode);
         });

@@ -7,64 +7,84 @@ using UnityEngine.Events;
 
 
 [System.Serializable]
-public class NodeEvent : UnityEvent<Node> { };
-//namespace NodeAI;
+public class NodeEvent : UnityEvent<Node> { }; //Event for when a node is clicked
+
+
+// Class: Node
+// Description:
+//     This class is used to create a node in the NodeAI.
+//     It contains a list of links, and a list of parameters.
+//     It also contains a list of states, which are used to
+//     determine the behavior of the node.
+//
 [System.Serializable]
 public class Node 
 {
-    public string ID;
+    public string ID; //Unique ID for the node
     [SerializeField]
-    public Rect rect;
-    public string title;
-    public bool isDragging;
-    public bool selected;
+    public Rect rect; //Rectangle for the node
+    public string title; //Title of the node
+    public bool isDragging; //Is the node being dragged?
+    public bool selected; //Is the node selected?
     [SerializeField]
-    public GUIStyle style;
+    public GUIStyle style; //Style of the node
     [SerializeField]
-    public GUIStyle defaultStyle;
+    public GUIStyle defaultStyle; //Default style of the node
     [SerializeField]
-    public GUIStyle selectedStyle;
+    public GUIStyle selectedStyle; //Selected style of the node
     [SerializeField]
-    public LinkPoint seqInput;
+    public LinkPoint seqInput; //Sequence input
     [SerializeField]
-    public LinkPoint seqOutput;
+    public LinkPoint seqOutput; //Sequence output
     [SerializeField]
-    public LinkPoint miscOutput;
+    public LinkPoint miscOutput; //Misc output
     [SerializeField]
-    public LinkPoint conditionTrueOutput, conditionFalseOutput;
+    public LinkPoint conditionTrueOutput, conditionFalseOutput; //Condition outputs
     [SerializeField]
-    public NodeEvent OnRemove;
+    public NodeEvent OnRemove; //Event for when the node is removed
     [SerializeField]
-    public List<NodeField> fields;
+    public List<NodeField> fields; //List of fields
 
-
-    public enum NodeType
+    //Enum defining possible node types
+    public enum NodeType 
     {
-        State,
-        Condition,
-        Action,
-        Logic,
-        Delay,
-        Parameter,
-        Entry
+        State, //State node: Used to control the agent with predefined behaviours
+        Condition, //Condition node: Used to determine if a condition is true or false
+        Action, //Action node: Used to perform an action defined within the Agent
+        Logic, //Logic node: Used to do binary logic on booleans
+        Delay, //Delay node: Used to delay the execution of a node
+        Parameter, //Parameter node: Used to store a value
+        Entry, //Entry node: Used to start the execution
+        Comparison //Comparison node: Used to compare two values
     }
+
+    //Class: NodeField
+    //Description:
+    //     This class is used to create a field in the Node.
+    //     A field has an editable value, and optional inputs and outputs.
+    //
     [Serializable]
     public class NodeField
     {
-        public FieldType type;
-        public int index = 0;
-        public string name;
-        public string svalue;
-        public int ivalue;
-        public float fvalue;
-        public bool bvalue;
+        public FieldType type; //Type of the field
+        public int index = 0; //Index of the field
+        public string name; //Name of the field
+        public string svalue; //String value of the field
+        public int ivalue; //Integer value of the field
+        public float fvalue; //Float value of the field
+        public bool bvalue; //Boolean value of the field
+        public bool hasInput; //Does the field have an input?
+        public bool hasOutput; //Does the field have an output?
+        [SerializeField]
+        public LinkPoint input; //Input of the field
+        [SerializeField]
+        public LinkPoint output; //Output of the field
 
-        public bool hasInput;
-        public bool hasOutput;
-        [SerializeField]
-        public LinkPoint input;
-        [SerializeField]
-        public LinkPoint output;
+        //NodeField constructor
+        //Parameters:
+        //      string name: Name of the field
+        //      string value: Value of the field
+        //      int index: Index of the field
         public NodeField(string name, string value, int index)
         {
             this.name = name;
@@ -73,6 +93,19 @@ public class Node
             this.index = index;
             
         }
+
+        //NodeField constructor
+        //Parameters:
+        //      string ID: Unique ID of the parent Node
+        //      string name: Name of the field
+        //      int value: Value of the field
+        //      bool hasInput: Does the field have an input?
+        //      LinkPointEvent OnClickInput: Event for when the input is clicked
+        //      GUIStyle inputStyle: Style of the input
+        //      bool hasOutput: Does the field have an output?
+        //      LinkPointEvent OnClickOutput: Event for when the output is clicked
+        //      GUIStyle outputStyle: Style of the output
+        //      int index: Index of the field
         public NodeField(string ID, string name, int value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
@@ -93,6 +126,18 @@ public class Node
             }
         }
         
+        //NodeField constructor
+        //Parameters:
+        //      string ID: Unique ID of the parent Node
+        //      string name: Name of the field
+        //      float value: Value of the field
+        //      bool hasInput: Does the field have an input?
+        //      LinkPointEvent OnClickInput: Event for when the input is clicked
+        //      GUIStyle inputStyle: Style of the input
+        //      bool hasOutput: Does the field have an output?
+        //      LinkPointEvent OnClickOutput: Event for when the output is clicked
+        //      GUIStyle outputStyle: Style of the output
+        //      int index: Index of the field
         public NodeField(string ID, string name, float value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
@@ -112,6 +157,19 @@ public class Node
                 this.output.fieldIndex = index;
             }
         }
+
+        //NodeField constructor
+        //Parameters:
+        //      string ID: Unique ID of the parent Node
+        //      string name: Name of the field
+        //      bool value: Value of the field
+        //      bool hasInput: Does the field have an input?
+        //      LinkPointEvent OnClickInput: Event for when the input is clicked
+        //      GUIStyle inputStyle: Style of the input
+        //      bool hasOutput: Does the field have an output?
+        //      LinkPointEvent OnClickOutput: Event for when the output is clicked
+        //      GUIStyle outputStyle: Style of the output
+        //      int index: Index of the field
         public NodeField(string ID, string name, bool value, bool hasInput, LinkPointEvent OnClickInput, GUIStyle inputStyle, bool hasOutput, LinkPointEvent OnClickOutput, GUIStyle outputStyle, int index)
         {
             this.name = name;
@@ -131,11 +189,20 @@ public class Node
                 this.output.fieldIndex = index;
             }
         }
+
+        //RelinkEvents
+        //Parameters:
+        //      LinkPointEvent OnClickInput: Event for when the input is clicked
+        //      LinkPointEvent OnClickOutput: Event for when the output is clicked
+        //Description:
+        //      This function relinks the events of the input and output.
         public void RelinkEvents(LinkPointEvent OnClickInput, LinkPointEvent OnClickOutput)
         {
             this.input.ReconnectEvents(OnClickInput);
             this.output.ReconnectEvents(OnClickOutput);
         }
+
+        //Enum defining the type of the field
         public enum FieldType
         {
             String,
@@ -144,25 +211,31 @@ public class Node
             Bool
         }
 
+        //Draw
+        //Parameters:
+        //      int line: Which line the field is on
+        //      Rect rect: Rectangle of the field
+        //Description:
+        //      This function draws the field.
         public void Draw(int line, Rect rect)
         {
-            EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), 80, 20), name + ":");
+            EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 2) * (1+line)), 80, 20), name + ":");
                 
             if(type == FieldType.String)
             {
-                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)), rect.width - 100, 20), svalue);
+                svalue = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 2) * (1+line)), rect.width - 100, 20), svalue);
             }
             else if(type == FieldType.Int)
             {
-                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), ivalue);
+                ivalue = EditorGUI.IntField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 2) * (1+line)),rect.width - 100, 20), ivalue);
             }
             else if(type == FieldType.Float)
             {
-                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), fvalue);
+                fvalue = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 2) * (1+line)),rect.width - 100, 20), fvalue);
             }
             else if(type == FieldType.Bool)
             {
-                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 5) * (1+line)),rect.width - 100, 20), bvalue);
+                bvalue = EditorGUI.Toggle(new Rect(rect.x + 85, rect.y + 5 + ( (EditorGUIUtility.singleLineHeight + 2) * (1+line)),rect.width - 100, 20), bvalue);
             }
 
             if(input != null)
@@ -185,6 +258,7 @@ public class Node
     //Parameter Node:
     public AIController.Parameter parameter;
 
+
     //Logic Node:
     public enum LogicType
     {
@@ -195,6 +269,19 @@ public class Node
     }
     public LogicType logicType;
 
+    //Comparison Node:
+    public enum ComparisonType
+    {
+        Equal,
+        NotEqual,
+        Greater,
+        Less,
+        GreaterEqual,
+        LessEqual
+    }
+    public ComparisonType comparisonType;
+    
+
     //State Node:
     public enum StateType
     {
@@ -204,8 +291,17 @@ public class Node
         Wander
     }
 
+    public AIController.StateVars stateVars;
+
     public StateType stateType;
 
+    //RelinkEvents
+    //Parameters:
+    //      LinkPointEvent OnClickInput: Event for when the input is clicked
+    //      LinkPointEvent OnClickOutput: Event for when the output is clicked
+    //      NodeEvent OnClickRemove: Event for removing the node
+    //Description:
+    //      This function relinks the events of the input and output.
     public void RelinkEvents(LinkPointEvent OnClickInput, LinkPointEvent OnClickOutput, NodeEvent OnClickRemove)
     {
         if(seqInput != null) seqInput.ReconnectEvents(OnClickInput);
@@ -220,6 +316,11 @@ public class Node
         OnRemove = OnClickRemove;
     }
 
+    //ReconnectLinks
+    //Parameters:
+    //      AIController controller: The controller to connect to
+    //Description:
+    //      This function reconnects the links of the node to the controller.
     public void ReconnectLinks(AIController controller)
     {
         if(seqInput != null) seqInput.ReconnectLinks(controller);
@@ -233,6 +334,23 @@ public class Node
             if(field.output != null) field.output.ReconnectLinks(controller);
         }
     }
+
+    //Node Constructor
+    //Parameters:
+    //        Vector2 position: Position of the node
+    //        float width: Width of the node
+    //        float height: Height of the node
+    //        GUIStyle nodeStyle: Style of the node
+    //        GUIStyle selectedStyle: Style of the node when selected
+    //        GUIStyle inputStyle: Style of the input point
+    //        GUIStyle outputStyle: Style of the output point
+    //        LinkPointEvent OnClickInput: Event for when the input is clicked
+    //        LinkPointEvent OnClickOutput: Event for when the output is clicked
+    //        NodeEvent OnClickRemove: Event for removing the node
+    //        NodeType type: Type of the node
+    //        bool hasSequenceLinks: Whether the node has sequence links
+    //Description:
+    //      This function creates a node.
     public Node(
         Vector2 position, 
         float width, 
@@ -262,6 +380,7 @@ public class Node
             case NodeType.State:
                 this.type = NodeType.State;
                 this.title = "State";
+                this.stateVars = new AIController.StateVars();
                 break;
             case NodeType.Condition:
                 this.type = NodeType.Condition;
@@ -319,6 +438,17 @@ public class Node
                 this.type = NodeType.Entry;
                 this.title = "Entry";
                 break;
+            case NodeType.Comparison:
+                this.type = NodeType.Comparison;
+                this.title = "Comparison";
+                this.fields = new List<NodeField>()
+                {
+                    new NodeField(this.ID, "Input A", 0.0f, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 0),
+                    new NodeField(this.ID, "Input B", 0.0f, true, OnClickInput, inputStyle, false, OnClickOutput, outputStyle, 1)
+                };
+                this.miscOutput = new LinkPoint(this.ID, LinkType.Output, LinkDataType.Bool, outputStyle, OnClickOutput);
+                this.comparisonType = ComparisonType.Equal;
+                break;
         }
 
         defaultStyle = nodeStyle;
@@ -368,7 +498,37 @@ public class Node
         switch(type)
         {
             case NodeType.State:
-                
+                switch(this.stateType)
+                {
+                    case StateType.Wander:
+                        title = "State: Wander";
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 1), 80, 20), "Radius:");
+                        stateVars.radius = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 1), rect.width - 100, 20),  stateVars.radius);
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 2), 80, 20), "Speed:");
+                        stateVars.speed = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), rect.width - 100, 20),  stateVars.speed);
+                        break;
+                    case StateType.Flee:
+                        title = "State: Flee";
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 1), 80, 20), "Radius:");
+                        stateVars.radius = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 1), rect.width - 100, 20),  stateVars.radius);
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 2), 80, 20), "Speed:");
+                        stateVars.speed = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), rect.width - 100, 20),  stateVars.speed);
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 3), 80, 20), "Tag:");
+                        stateVars.tag = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20),  stateVars.tag);
+                        break;
+                    case StateType.Idle:
+                        title = "State: Idle";
+                        break;
+                    case StateType.Seek:
+                        title = "State: Seek";
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 1), 80, 20), "Radius:");
+                        stateVars.radius = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 1), rect.width - 100, 20),  stateVars.radius);
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 2), 80, 20), "Speed:");
+                        stateVars.speed = EditorGUI.FloatField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 2), rect.width - 100, 20),  stateVars.speed);
+                        EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 5 + (EditorGUIUtility.singleLineHeight * 3), 80, 20), "Tag:");
+                        stateVars.tag = EditorGUI.TextField(new Rect(rect.x + 85, rect.y + 5 + ( EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20),  stateVars.tag);
+                        break;
+                }
                 break;
             case NodeType.Parameter:
                 
@@ -409,6 +569,11 @@ public class Node
                     title = "XOR | Logic";
                     break;
                 }
+                break;
+            case NodeType.Comparison:
+                EditorGUI.LabelField(new Rect(rect.x + 15 , rect.y + 10 + (EditorGUIUtility.singleLineHeight * 3), 80, 20), "Type:");
+                comparisonType = (ComparisonType)EditorGUI.EnumPopup(new Rect(rect.x + 85, rect.y + 10 + (EditorGUIUtility.singleLineHeight * 3), rect.width - 100, 20), comparisonType);
+                miscOutput.Draw(fields.Count, rect);
                 break;
             case NodeType.Condition:
                 title = "IF | Condition";

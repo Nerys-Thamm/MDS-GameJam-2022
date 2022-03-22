@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.AI;
 
 public class NodeAI_Agent : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class NodeAI_Agent : MonoBehaviour
     public Node previousSequenceNode;
     [SerializeField]
     public List<Action> actions;
+
+    public NavMeshAgent agent;
+
+
 
     [System.Serializable]
     public struct Action
@@ -47,6 +52,7 @@ public class NodeAI_Agent : MonoBehaviour
 
     void Update()
     {
+        //AI Update
         if(delayTimer > 0.0f)
         {
             delayTimer -= Time.deltaTime;
@@ -55,7 +61,111 @@ public class NodeAI_Agent : MonoBehaviour
         {
             if(currentSequenceNode != null) HandleNode(currentSequenceNode);
         }
+
+        //State Logic
+        switch(currentState)
+        {
+            case Node.StateType.Idle:
+                DoIdleState();
+                break;
+            case Node.StateType.Seek:
+                DoSeekState();
+                break;
+            case Node.StateType.Flee:
+                DoFleeState();
+                break;
+            case Node.StateType.Wander:
+                DoWanderState();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void DoWanderState()
+    {
+        //Do Wander State
+        if(agent.remainingDistance < 0.1f)
+        {
+            agent.SetDestination(GetWanderTarget());
+        }
+        agent.speed = currentStateEntryNode.stateVars.speed;
         
+    }
+
+    private Vector3 GetWanderTarget()
+    {
+        Vector3 wanderTarget = transform.position + (currentStateEntryNode.stateVars.radius * transform.forward) + Random.insideUnitSphere * currentStateEntryNode.stateVars.radius;
+        NavMeshHit hit;
+        NavMesh.SamplePosition(wanderTarget, out hit, currentStateEntryNode.stateVars.radius, 1);
+        return hit.position;
+    }
+
+    private void DoFleeState()
+    {
+        //Do Flee State
+        if(agent.remainingDistance < 0.1f)
+        {
+            agent.SetDestination(GetFleeTarget(currentStateEntryNode.stateVars.tag));
+        }
+        agent.speed = currentStateEntryNode.stateVars.speed;
+    }
+
+    //Flee from objects with a given tag
+    private Vector3 GetFleeTarget(string tag)
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+        Vector3 fleeTarget = transform.position;
+        float closestDistance = float.MaxValue;
+        foreach(GameObject obj in objects)
+        {
+            float distance = Vector3.Distance(transform.position, obj.transform.position);
+            if(distance < closestDistance)
+            {
+                closestDistance = distance;
+                fleeTarget = obj.transform.position;
+            }
+        }
+        //Get a point away from the flee target
+        Vector3 fleeDirection = (transform.position - fleeTarget).normalized;
+        Vector3 fleePoint = transform.position + (fleeDirection * currentStateEntryNode.stateVars.radius);
+        NavMeshHit hit;
+        NavMesh.SamplePosition(fleePoint, out hit, currentStateEntryNode.stateVars.radius, 1);
+        return hit.position;
+    }
+
+    private void DoIdleState()
+    {
+        //Do Idle State
+        if(agent.remainingDistance < 0.1f)
+        {
+            agent.SetDestination(transform.position);
+        }
+    }
+
+    private void DoSeekState()
+    {
+        
+        agent.SetDestination(GetSeekTarget(currentStateEntryNode.stateVars.tag));
+        agent.speed = currentStateEntryNode.stateVars.speed;
+    }
+
+    //Seek to objects with a given tag
+    private Vector3 GetSeekTarget(string tag)
+    {
+        GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+        Vector3 seekTarget = transform.position;
+        float closestDistance = float.MaxValue;
+        foreach(GameObject obj in objects)
+        {
+            float distance = Vector3.Distance(transform.position, obj.transform.position);
+            if(distance < closestDistance)
+            {
+                closestDistance = distance;
+                seekTarget = obj.transform.position;
+            }
+        }
+        return seekTarget;
     }
 
     private void SetCurrentSequenceNode(Node node)
@@ -204,6 +314,10 @@ public class NodeAI_Agent : MonoBehaviour
             {
                 node.fields[0].bvalue = n.parameter.bvalue;
             }
+            else if(n.type == Node.NodeType.Comparison)
+            {
+                node.fields[0].bvalue = ComputeComparisonNode(n);
+            }
         }
         if(node.fields[0].bvalue)
         {
@@ -232,24 +346,63 @@ public class NodeAI_Agent : MonoBehaviour
         
     }
 
+    private bool ComputeComparisonNode(Node node)
+    {
+        if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
+        {
+            node.fields[0].fvalue = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).parameter.fvalue;
+        }
+        if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
+        {
+            node.fields[1].fvalue = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).parameter.fvalue;
+        }
+        float A = node.fields[0].fvalue;
+        float B = node.fields[1].fvalue;
+        
 
+        switch(node.comparisonType)
+        {
+            case Node.ComparisonType.Equal:
+                return A == B;
+            case Node.ComparisonType.NotEqual:
+                return A != B;
+            case Node.ComparisonType.Greater:
+                return A > B;
+            case Node.ComparisonType.GreaterEqual:
+                return A >= B;
+            case Node.ComparisonType.Less:
+                return A < B;
+            case Node.ComparisonType.LessEqual:
+                return A <= B;
+            default:
+                return false;
+        }
+    }
     private bool ComputeLogicNode(Node node)
     {
-        if(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
+        if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
         {
             node.fields[0].bvalue = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).parameter.bvalue;
         }
-        else if(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
+        else if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
         {
             node.fields[0].bvalue = ComputeLogicNode(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.node);
         }
-        if(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
+        else if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Comparison)
+        {
+            node.fields[0].bvalue = ComputeComparisonNode(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.node);
+        }
+        if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
         {
             node.fields[1].bvalue = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).parameter.bvalue;
         }
-        else if(controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
+        else if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Logic)
         {
             node.fields[1].bvalue = ComputeLogicNode(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.node);
+        }
+        else if(node.fields[1].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Comparison)
+        {
+            node.fields[1].bvalue = ComputeComparisonNode(controller.GetLinkFromID(node.fields[1].input.linkIDs[0]).input.node);
         }
         bool A = node.fields[0].bvalue;
         bool B = node.fields[1].bvalue;
