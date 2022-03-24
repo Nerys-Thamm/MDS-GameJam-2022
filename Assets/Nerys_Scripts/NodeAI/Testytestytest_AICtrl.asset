@@ -16,8 +16,8 @@ MonoBehaviour:
   - ID: EntryNode
     rect:
       serializedVersion: 2
-      x: 200
-      y: 200
+      x: 35
+      y: 416
       width: 200
       height: 50
     title: Entry
@@ -228,8 +228,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 198
-        y: 205
+        x: 33
+        y: 421
         width: 10
         height: 20
       type: 0
@@ -310,8 +310,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 392
-        y: 205
+        x: 227
+        y: 421
         width: 10
         height: 20
       type: 1
@@ -656,8 +656,8 @@ MonoBehaviour:
   - ID: jVz2i1QxEMCNk4QpXado
     rect:
       serializedVersion: 2
-      x: 132
-      y: 435
+      x: 46
+      y: 514
       width: 200
       height: 100
     title: Comparison
@@ -868,8 +868,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 130
-        y: 440
+        x: 44
+        y: 519
         width: 10
         height: 20
       type: 0
@@ -950,8 +950,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 130
-        y: 440
+        x: 44
+        y: 519
         width: 10
         height: 20
       type: 0
@@ -1032,8 +1032,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 324
-        y: 482
+        x: 238
+        y: 561
         width: 10
         height: 20
       type: 1
@@ -1292,8 +1292,8 @@ MonoBehaviour:
         fieldIndex: 0
         rect:
           serializedVersion: 2
-          x: 130
-          y: 461
+          x: 44
+          y: 540
           width: 10
           height: 20
         type: 0
@@ -1374,8 +1374,8 @@ MonoBehaviour:
         fieldIndex: 0
         rect:
           serializedVersion: 2
-          x: 130
-          y: 461
+          x: 44
+          y: 540
           width: 10
           height: 20
         type: 0
@@ -1465,8 +1465,8 @@ MonoBehaviour:
         fieldIndex: 1
         rect:
           serializedVersion: 2
-          x: 130
-          y: 482
+          x: 44
+          y: 561
           width: 10
           height: 20
         type: 0
@@ -1547,8 +1547,8 @@ MonoBehaviour:
         fieldIndex: 0
         rect:
           serializedVersion: 2
-          x: 130
-          y: 482
+          x: 44
+          y: 561
           width: 10
           height: 20
         type: 0
@@ -1642,8 +1642,8 @@ MonoBehaviour:
   - ID: P66Kld6jRDBXYUmAPQiS
     rect:
       serializedVersion: 2
-      x: 444
-      y: 346
+      x: 310
+      y: 416
       width: 200
       height: 100
     title: IF | Condition
@@ -1854,8 +1854,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 442
-        y: 351
+        x: 308
+        y: 421
         width: 10
         height: 20
       type: 0
@@ -1937,8 +1937,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 442
-        y: 351
+        x: 308
+        y: 421
         width: 10
         height: 20
       type: 0
@@ -2101,8 +2101,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 636
-        y: 393
+        x: 502
+        y: 463
         width: 10
         height: 20
       type: 1
@@ -2184,8 +2184,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 636
-        y: 414
+        x: 502
+        y: 484
         width: 10
         height: 20
       type: 1
@@ -2279,8 +2279,8 @@ MonoBehaviour:
         fieldIndex: 0
         rect:
           serializedVersion: 2
-          x: 442
-          y: 372
+          x: 308
+          y: 442
           width: 10
           height: 20
         type: 0
@@ -2362,8 +2362,8 @@ MonoBehaviour:
         fieldIndex: 0
         rect:
           serializedVersion: 2
-          x: 442
-          y: 372
+          x: 308
+          y: 442
           width: 10
           height: 20
         type: 0
@@ -2457,8 +2457,8 @@ MonoBehaviour:
   - ID: TKYYbe1dgf5A44haDMiP
     rect:
       serializedVersion: 2
-      x: 452
-      y: 599
+      x: 577
+      y: 417
       width: 200
       height: 100
     title: 'State: Idle'
@@ -2669,8 +2669,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 450
-        y: 604
+        x: 575
+        y: 422
         width: 10
         height: 20
       type: 0
@@ -2752,8 +2752,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 644
-        y: 604
+        x: 769
+        y: 422
         width: 10
         height: 20
       type: 1
@@ -3099,8 +3099,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 324
-        y: 482
+        x: 238
+        y: 561
         width: 10
         height: 20
       type: 1
@@ -3183,8 +3183,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 442
-        y: 372
+        x: 308
+        y: 442
         width: 10
         height: 20
       type: 0
@@ -3269,8 +3269,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 392
-        y: 205
+        x: 227
+        y: 421
         width: 10
         height: 20
       type: 1
@@ -3353,8 +3353,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 442
-        y: 351
+        x: 308
+        y: 421
         width: 10
         height: 20
       type: 0
@@ -3439,8 +3439,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 636
-        y: 393
+        x: 502
+        y: 463
         width: 10
         height: 20
       type: 1
@@ -3523,8 +3523,8 @@ MonoBehaviour:
       fieldIndex: 0
       rect:
         serializedVersion: 2
-        x: 450
-        y: 604
+        x: 575
+        y: 422
         width: 10
         height: 20
       type: 0

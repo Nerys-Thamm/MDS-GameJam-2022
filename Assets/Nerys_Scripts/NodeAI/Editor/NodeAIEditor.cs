@@ -150,8 +150,7 @@ public class NodeAIEditor : EditorWindow
         {
             DrawGrid(20, 0.2f, Color.gray);
             DrawGrid(100, 0.4f, Color.gray);
-            //controller.ReconnectNodes();
-            //controller.ReconnectLinks();
+            
             DrawNodes();
             DrawLinks();
             DrawLinkLine(Event.current);
@@ -250,7 +249,23 @@ public class NodeAIEditor : EditorWindow
         }
         else
         {
+            AIController cache = controller;
             controller = EditorGUILayout.ObjectField(controller, typeof(AIController), true) as AIController;
+            if(controller != cache)
+            {
+                if(controller != null)
+                {
+                    foreach(Node n in controller.nodes)
+                    {
+                        n.RelinkEvents(OnInputEvent, OnOutputEvent, OnNodeEvent);
+                        n.ReconnectLinks(controller);
+                    }
+                    foreach(Link l in controller.links)
+                    {
+                        l.RelinkEvents(OnLinkEvent);
+                    }
+                }
+            }
             if(GUILayout.Button("Save") && controller != null)
             {
                 EditorUtility.SetDirty(controller);
