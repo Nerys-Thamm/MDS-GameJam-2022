@@ -12,6 +12,7 @@ public class NodeAI_AgentEditor : Editor
 
     bool showParameters = false;
 
+    // Use this for initialization
     void OnEnable()
     {
         agent = (NodeAI_Agent)target;
@@ -30,9 +31,12 @@ public class NodeAI_AgentEditor : Editor
         }
     }
 
+    //OnInspectorGUI
+    //Description:
+    //This function is called when the inspector is drawn.
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        base.OnInspectorGUI(); //Draws the default inspector.
         agent.NodeAIController = EditorGUILayout.ObjectField(agent.NodeAIController, typeof(AIController), true) as AIController;
         switch(agent.currentState)
         {
@@ -49,9 +53,7 @@ public class NodeAI_AgentEditor : Editor
                 EditorGUILayout.LabelField("Current State: Wander");
                 break;
         }
-        // SerializedProperty actionsProperty = serializedAgent.FindProperty("actions");
-        // EditorGUILayout.PropertyField(actionsProperty, true);
-        // serializedAgent.ApplyModifiedProperties();
+        
         if(controller != null)
         {   
 

@@ -46,6 +46,11 @@ public class AIController : ScriptableObject
     [SerializeField]
     public Dictionary<string, Link> linkDictionary;
 
+    //GetLinkFromID
+    //Parameters:
+    //   string ID: The ID of the link to get.
+    //Description:
+    //   Gets a link from its ID.
     public Link GetLinkFromID(string id)
     {
         if(linkDictionary != null)
@@ -68,6 +73,11 @@ public class AIController : ScriptableObject
         return null;
     }
 
+    //AddLink
+    //Parameters:
+    //   Link link: The link to add.
+    //Description:
+    //   Adds a link to the list of links.
     public void AddLink(Link link)
     {
         links.Add(link);
@@ -79,12 +89,22 @@ public class AIController : ScriptableObject
         linkDictionary.Add(link.ID, link);
     }
 
+    //RemoveLink
+    //Parameters:
+    //   Link link: The link to remove.
+    //Description:
+    //   Removes a link from the list of links.
     public void RemoveLink(Link link)
     {
         links.Remove(link);
         if(linkDictionary != null) linkDictionary.Remove(link.ID);
     }
 
+    //GetNodeFromID
+    //Parameters:
+    //   string ID: The ID of the node to get.
+    //Description:
+    //   Gets a node from its ID.
     public Node GetNodeFromID(string id)
     {
         if(nodeDictionary != null)
@@ -107,6 +127,11 @@ public class AIController : ScriptableObject
         return null;
     }
 
+    //GenerateRandomString
+    //Parameters:
+    //   int length: The length of the string to generate.
+    //Description:
+    //   Generates a random string.
     public static string GenerateRandomString(int length)
     {
         string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -118,6 +143,11 @@ public class AIController : ScriptableObject
         return result;
     }
 
+    //AddNode
+    //Parameters:
+    //   Node node: The node to add.
+    //Description:
+    //   Adds a node to the list of nodes.
     public void AddNode(Node node)
     {
         nodes.Add(node);
@@ -125,6 +155,11 @@ public class AIController : ScriptableObject
         nodeDictionary.Add(node.ID, node);
     }
 
+    //RemoveNode
+    //Parameters:
+    //   Node node: The node to remove.
+    //Description:
+    //   Removes a node from the list of nodes.
     public void RemoveNode(Node node)
     {
         nodes.Remove(node);
@@ -132,6 +167,9 @@ public class AIController : ScriptableObject
         nodeDictionary.Remove(node.ID);
     }
 
+    //ReconnectNodes
+    //Description:
+    //   Reconnects all nodes to each other.
     public void ReconnectNodes()
     {
         foreach(Link link in links)
@@ -144,12 +182,4 @@ public class AIController : ScriptableObject
         
     }
 
-    public void RecreateButtons()
-    {
-        
-    }
-
-    
-
-    
 }

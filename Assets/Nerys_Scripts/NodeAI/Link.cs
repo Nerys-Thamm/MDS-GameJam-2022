@@ -21,6 +21,13 @@ using UnityEngine.Events;
         [SerializeField]
         public LinkEvent OnClickEvent;
 
+        //Link
+        //Parameters:
+        //   LinkPoint input: The input link point.
+        //   LinkPoint output: The output link point.
+        //   LinkEvent OnClickEvent: The event to be called when the link is clicked.
+        //Description:
+        //   Creates a link.
         public Link(LinkPoint input, LinkPoint output, LinkEvent OnClickEvent)
         {
             this.input = input;
@@ -28,10 +35,19 @@ using UnityEngine.Events;
             this.OnClickEvent = OnClickEvent;
         }
         
+        //RelinkEvents
+        //Parameters:
+        //    LinkEvent OnClickEvent: The event to be called when the link is clicked.
+        //Description:
+        //    Relinks the link's OnClickEvent.
         public void RelinkEvents(LinkEvent OnClickEvent)
         {
             this.OnClickEvent = OnClickEvent;
         }
+    
+        //Draw
+        //Description:
+        //    Draws the link.
         public void Draw()
         {
             Handles.DrawBezier(
@@ -58,10 +74,8 @@ using UnityEngine.Events;
             }
         }
 
-        public void ProcessLink()
-        {
-
-        }
+        
+    
 
         
     }

@@ -42,6 +42,15 @@ using UnityEngine.Events;
         [SerializeField]
         public LinkPointEvent OnClickEvent;
 
+        //LinkPoint
+        //Parameters:
+        //   string NodeID: The ID of the node this link point belongs to.
+        //   LinkType type: The type of link point.
+        //   LinkDataType dataType: The data type of the link point.
+        //   GUIStyle style: The style of the link point.
+        //   LinkPointEvent OnClickEvent: The event to be called when the link point is clicked.
+        //Description:
+        //   Creates a link point.
         public LinkPoint(string NodeID, LinkType type, LinkDataType dataType, GUIStyle style, LinkPointEvent OnClickEvent)
         {
             this.NodeID = NodeID;
@@ -52,11 +61,21 @@ using UnityEngine.Events;
             rect = new Rect(0, 0, 10, 20);
         }
 
+        //ReconnectEvents
+        //Parameters:
+        //   LinkPointEvent OnClickEvent: The event to be called when the link point is clicked.
+        //Description:
+        //   Reconnects the link point's OnClickEvent.
         public void ReconnectEvents(LinkPointEvent OnClickEvent)
         {
             this.OnClickEvent = OnClickEvent;
         }
 
+        //ReconnectLinks
+        //Parameters:
+        //   AIController controller: The controller of the node this link point belongs to.
+        //Description:
+        //   Reconnects the link point's links.
         public void ReconnectLinks(AIController controller)
         {
             foreach (string linkID in linkIDs)
@@ -76,6 +95,12 @@ using UnityEngine.Events;
             }
         }
 
+        //Draw
+        //Parameters:
+        //   int line: The line the link point is on.
+        //   rect: The rect of the link point.
+        //Description:
+        //   Draws the link point.
         public void Draw(int line, Rect rect)
         {
             this.rect = new Rect(0, 0, 10, 20);

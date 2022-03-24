@@ -192,12 +192,22 @@ public class NodeAI_Agent : MonoBehaviour
         return seekTarget;
     }
 
+    //SetCurrentSequenceNode
+    //Parameters:
+    //Node node - The node to set the current sequence node to
+    //Description:
+    //Sets the current sequence node to the given node
     private void SetCurrentSequenceNode(Node node)
     {
         previousSequenceNode = currentSequenceNode;
         currentSequenceNode = node;
     }
 
+    //HandleNode
+    //Parameters:
+    //Node node - The node to handle
+    //Description:
+    //Handles the given node
     public void HandleNode(Node node)
     {
         switch (node.type)
@@ -245,6 +255,9 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //FindNextSequenceNode
+    //Description:
+    //Finds the next sequence node
     public Node FindNextSequenceNode()
     {
         if(currentSequenceNode.seqOutput.linkIDs.Count > 0)
@@ -257,6 +270,12 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //SetBool
+    //Parameters:
+    //string name - The name of the bool to set
+    //bool value - The value to set the bool to
+    //Description:
+    //Sets the bool with the given name to the given value
     public void SetBool(string name, bool value)
     {
         foreach(Node n in controller.nodes)
@@ -274,6 +293,12 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //SetFloat
+    //Parameters:
+    //string name - The name of the float to set
+    //float value - The value to set the float to
+    //Description:
+    //Sets the float with the given name to the given value
     public void SetFloat(string name, float value)
     {
         foreach(Node n in controller.nodes)
@@ -291,6 +316,12 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //SetInt
+    //Parameters:
+    //string name - The name of the int to set
+    //int value - The value to set the int to
+    //Description:
+    //Sets the int with the given name to the given value
     public void SetInt(string name, int value)
     {
         foreach(Node n in controller.nodes)
@@ -308,6 +339,11 @@ public class NodeAI_Agent : MonoBehaviour
         }
     }
 
+    //HandleParameterNode
+    //Parameters:
+    //Node node - The node to handle
+    //Description:
+    //Handles the given parameter node
     private void HandleParameterNode(Node node)
     {
         
@@ -325,25 +361,30 @@ public class NodeAI_Agent : MonoBehaviour
         
     }
 
+    //HandleConditionNode
+    //Parameters:
+    //Node node - The node to handle
+    //Description:
+    //Handles the given condition node
     private void HandleConditionNode(Node node)
     {
-        if(node.fields[0].input.linkIDs.Count != 0)
+        if(node.fields[0].input.linkIDs.Count != 0) //if the first input is linked
         {
             Node n = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID);
-            if(n.type == Node.NodeType.Logic)
+            if(n.type == Node.NodeType.Logic) //if the input node is a logic node
             {
                 node.fields[0].bvalue = ComputeLogicNode(n);
             }
-            else if(n.type == Node.NodeType.Parameter)
+            else if(n.type == Node.NodeType.Parameter) //if the input node is a parameter node
             {
                 node.fields[0].bvalue = n.parameter.bvalue;
             }
-            else if(n.type == Node.NodeType.Comparison)
+            else if(n.type == Node.NodeType.Comparison) //if the input node is a comparison node
             {
                 node.fields[0].bvalue = ComputeComparisonNode(n);
             }
         }
-        if(node.fields[0].bvalue)
+        if(node.fields[0].bvalue) //Grab the value from the input node
         {
             if(node.conditionTrueOutput.linkIDs.Count > 0)
             {
@@ -370,6 +411,11 @@ public class NodeAI_Agent : MonoBehaviour
         
     }
 
+    //ComputeComparisonNode
+    //Parameters:
+    //Node node - The node to compute
+    //Description:
+    //Computes the given comparison node
     private bool ComputeComparisonNode(Node node)
     {
         if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
@@ -402,8 +448,15 @@ public class NodeAI_Agent : MonoBehaviour
                 return false;
         }
     }
+
+    //ComputeLogicNode
+    //Parameters:
+    //Node node - The node to compute
+    //Description:
+    //Computes the given logic node
     private bool ComputeLogicNode(Node node)
     {
+        //Grab values from inputs
         if(node.fields[0].input.linkIDs.Count > 0 && controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).type == Node.NodeType.Parameter)
         {
             node.fields[0].bvalue = controller.GetNodeFromID(controller.GetLinkFromID(node.fields[0].input.linkIDs[0]).input.NodeID).parameter.bvalue;
@@ -431,7 +484,7 @@ public class NodeAI_Agent : MonoBehaviour
         bool A = node.fields[0].bvalue;
         bool B = node.fields[1].bvalue;
         
-
+        //Compute the logic node
         switch (node.logicType)
         {
             case Node.LogicType.AND:

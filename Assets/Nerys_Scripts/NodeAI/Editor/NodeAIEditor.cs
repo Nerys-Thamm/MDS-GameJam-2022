@@ -45,6 +45,8 @@ public class NodeAIEditor : EditorWindow
         window.titleContent = new GUIContent("NodeAI");
     }
 
+    // OnEnable
+    //Description: Called when the window is opened
     private void OnEnable()
     {
         if(OnInputEvent == null) OnInputEvent = new LinkPointEvent();
@@ -144,6 +146,8 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //OnGUI
+    //Description: Called when the window is drawn
     private void OnGUI()
     {
         if(controller != null)
@@ -222,6 +226,8 @@ public class NodeAIEditor : EditorWindow
         if(GUI.changed) Repaint();
     }
 
+    //DrawUI
+    //Description: Draws the UI for the window
     private void DrawUI()
     {
         EditorGUILayout.BeginHorizontal();
@@ -281,7 +287,8 @@ public class NodeAIEditor : EditorWindow
     }
     
     
-
+    //CreateNewAIController
+    //Description: Creates a new AIController
     private void CreateNewAIController(string name)
     {
         controller = ScriptableObject.CreateInstance<AIController>();
@@ -297,6 +304,12 @@ public class NodeAIEditor : EditorWindow
 
 
 //NODE UI CODE
+    //DrawGrid
+    //Parameters:
+    //  float gridSpacing: The spacing between each grid line
+    //  float gridOpacity: The opacity of the grid lines
+    //  Color gridColor: The color of the grid lines
+    //Description: Draws the grid lines
     private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor)
     {
         int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
@@ -322,6 +335,10 @@ public class NodeAIEditor : EditorWindow
         Handles.EndGUI();
     }
 
+    //DrawLinkLine
+    //Parameters:
+    //  Event e: The current event
+    //Description: Draws the line between the nodes
     private void DrawLinkLine(Event e)
     {
         if(selectedInput != null && selectedOutput == null)
@@ -355,6 +372,8 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //DrawNodes
+    //Description: Draws all the nodes
     private void DrawNodes()
     {
         if(controller.nodes != null)
@@ -366,6 +385,8 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //DrawLinks
+    //Description: Draws all the links
     private void DrawLinks()
     {
         if(controller.links != null)
@@ -377,6 +398,10 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //ProcessEvents
+    //Parameters:
+    //  Event e: The current event
+    //Description: Processes all the events
     private void ProcessEvents(Event e)
     {
 
@@ -403,6 +428,10 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //OnMoveCanvas
+    //Parameters:
+    //  Vector2 delta: The amount to move the canvas
+    //Description: Moves the canvas
     private void OnMoveCanvas(Vector2 delta)
     {
         offset += delta;
@@ -418,6 +447,10 @@ public class NodeAIEditor : EditorWindow
         GUI.changed = true;
     }
 
+    //ProcessNodeEvents
+    //Parameters:
+    //  Event e: The current event
+    //Description: Processes all the node events
     private void ProcessNodeEvents(Event e)
     {
         if(controller.nodes != null)
@@ -434,6 +467,10 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //GenerateRandomString
+    //Parameters:
+    //  int length: The length of the string
+    //Description: Generates a random string
     private string GenerateRandomString(int length)
     {
         string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -445,6 +482,10 @@ public class NodeAIEditor : EditorWindow
         return result;
     }
 
+    //ProcessContextMenu
+    //Parameters:
+    //  Vector2 mousePosition: The position of the mouse
+    //Description: Processes the context menu
     private void ProcessContextMenu(Vector2 mousePosition)
     {
         GenericMenu genericMenu = new GenericMenu();
@@ -567,6 +608,11 @@ public class NodeAIEditor : EditorWindow
         genericMenu.ShowAsContext();
     }
 
+    //OnClickInput
+    //Parameters:
+    //  LinkPoint: The link point that was clicked
+    //Description:
+    //  This function is called when a link point is clicked.
     private void OnClickInput(LinkPoint linkPoint)
     {
         selectedInput = linkPoint;
@@ -583,6 +629,11 @@ public class NodeAIEditor : EditorWindow
         
     }
 
+    //OnClickOutput
+    //Parameters:
+    //  LinkPoint: The link point that was clicked
+    //Description:
+    //  This function is called when a link point is clicked.
     private void OnClickOutput(LinkPoint linkPoint)
     {
         selectedOutput = linkPoint;
@@ -599,6 +650,9 @@ public class NodeAIEditor : EditorWindow
         
     }
 
+    //MakeLink
+    //Description:
+    //  This function makes a link between the selected input and output.
     private void MakeLink()
     {
         if(selectedOutput != null)
@@ -614,6 +668,11 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //RemoveLink
+    //Parameters:
+    //  Link: The link to remove
+    //Description:
+    //  This function removes a link from the controller.
     private void RemoveLink(Link link)
     {
         if(controller.links.Contains(link))
@@ -624,6 +683,11 @@ public class NodeAIEditor : EditorWindow
         }
     }
 
+    //OnRemoveNode
+    //Parameters:
+    //  Node: The node to remove
+    //Description:
+    //  This function removes a node from the controller.
     private void OnRemoveNode(Node node)
     {
         if(controller.links != null)
